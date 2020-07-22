@@ -1,0 +1,406 @@
+To install docker 
+
+https://docs.docker.com/engine/install/debian/
+$ curl -fsSL https://get.docker.com -o get-docker.sh
+$ sudo sh get-docker.sh
+
+sudo docker version
+docker run docker/whalesay cowsay boo  ## run simple doker
+
+#############################  Docker Commands  ##################################
+
+docker run <container>			# runs an instance of an image
+docker ps						# check running containers
+docker ps -a					# list even closed containers
+
+# Ecah container has a random name and ID
+
+docker stop <NAME>
+docker stop <ID>
+
+docker rm <NAME>				# Remover a container
+docker rm <ID>
+docker rm $(docker ps -aq)		# remove every contaner
+
+docker images 					# list containers in the machine
+docker rmi <IMAGE NAME>			# Remove an image
+#### NOOOOTE: exit any running container from that image before delete
+
+docker run <Image>				# download an image from docker hub without running it
+docker run --name <NAME> <Image Name>
+
+
+## The continer lives as long the processes are working, once a process ends the container exits automaically
+## if we run Ubuntu image it will exit insantly because it doesnt have processes running
+
+docker run ubuntu sleep 100			# runn Ubuntu container and issue a sleep command to ubuntu
+
+docker exec <NAME or ID> cat /etc/hosts		# run commands on runnnig container
+
+# Run attach and detach
+# when we run a container it runs in the foreground (just when you run simple web server in Kali)
+# to run a container in the back ground
+
+docker run -d <Image NAME>		# run in detach mode
+docker attach <ID>			# attach to container
+
+#############################  Docker Run  ##################################
+
+#  TAGS
+docker run redis:4.0  # tag to set the version if we run without a tag it will get the latest version
+
+
+# STDIN and PROMPT
+# To connect the container to standard in STDIN use -i
+# To connect the container to prompt use -tag
+
+docker run -it <image name>
+
+-----------------------------  Port Mapping ----------------------------------
+
+# Each container is treated as isolated intit >> it has it own IP and PORT, these ports and IPs can be accessed from docker hosts
+# we can map the container port to an external port 
+
+docker rum -p 80:5000 nginx  		# Run nginx on port 80 and give it port 5000  								>>IP1:5000
+docker rum -p 8080:5000 nginx  		# Run another instance of nginx on port 8080 and give it port 5000			>>IP2:5000
+docker rum -p 8081:5000 nginx  		# Run yet another instance of nginx on port 8081 and give it port 5000		>>IP3:5000
+# from the out side we see ports 80 ,  8080 , 8081 opened with seperated nginx instances on each one.
+
+#%%%%% NOTE  :  We cant map 2 containers to the same external port
+
+------------------------------  Volume Mapping --------------------------------
+# each contaner has it own files structure which gets deleted once we remove the container. (data are stored inside the container)
+# we can presist the data by mapping an exteernal volume for the container this way the data remains after we delete the container
+
+docker run -v /opt/database:/var/lib/mysql mysql
+
+------------------------------  Inspect container --------------------------------
+
+docker inspect <container Name>			# view detailed info
+
+------------------------------  container Logs --------------------------------
+
+docker logs <container Name>			# view detailed info
+
+------------------------------  Environoment vairable --------------------------------
+
+docker run -e <VARIABLE NAME>=<VALUE> <IMAGE>
+docker run -e APP_COLOR=blue simple-webapp-color
+
+# to inspect environoment variables use
+docker inspect <container>
+
+#############################  Create an Image  ##################################
+# To create a docker images we first create a docker file called
+Dockerfile
+# this file contins intructions to create the image from the source code. 
+# it consistes of lines each line is 
+INSTRUCTOIN ARGUMENT
+
+
+FROM Ubuntu			# Base OS /// Each continer image is based on another container image, so we should specify the main image
+
+# Dependencies
+RUN apt update			# system arguments
+RUN apt install python
+
+RUN pip install flask		# environomet arguments
+
+# copy source code
+COPY . /opt 				# this will  copy the source code to the /opt dir in the container
+
+# set Entry point
+ENTRYOINT flask run			# what will happend when crunning the image
+
+------------------------------  Dockerfile layers --------------------------------
+
+# we create the image by, from Dockerfile directory
+docker build . 			# simple build
+docker build -t myimage .	# build and name it myimage
+docker build -t myimage:lite . 	# call it my image with lite tag
+
+# this build process works in layers it will cash each step (in case of an error, aleardy done processess will run again)
+# So once we install the dependencies we can run can modify the source code and when we build only the processes after COPY will run
+# So the base OS and depencies will not run this is faster
+
+# PUSH to docker hub
+
+docker push <accountname>/<image name>
+
+#############################  Environoment VS CMD  ##################################
+# SLEEP Scenario
+
+# CMD & ENTRYOINT
+# CMD & ENTRYOINT is specify what command will be excuted once the images is runned
+# Example
+# Ubuntu Dockerfile
+CMD bash
+#  MYSQL Dockerfile
+CMD ["mysql"]
+
+# Lets assume we want to create an Ubuntu image that will excute another command 
+docker run Ubuntu sleep 10  # This will replace bash command and excute sleep 10
+# We can create new image from Ubuntu as below
+
++++++++++++++++++
+FROM Ubuntu
+CMD sleep 10
+or 
+CMD ["sleep",'10']  # we cant use CMD ["sleep 10"]
+++++++++++++++++
+----------- NOTE ---------------
+CMD <command> <param>
+or
+CMD ["<command>","<parameter>"}
+--------------------------------
+# we build this new image
+
+>>docker build -t ubuntu-sleeper .
+>>docker run ubuntu-sleeper
+
+# we can replace the command by typing any thing and sleep 10 will be replaced.
+# WHAT IF WE WANT TO PASS PARAMETERS TO RUN COMMAND
+
+---- ENTRYOINT ----
+# this will specify the command that will be excuted without the parameters and if we added a new entry on the run command it will be appended
+
+++++++++++++++++++++
+ENTRYOINT ["sleep"]  
+++++++++++++++++++++
+
+>>docker run ubuntu-sleeper  		## EROOOR because the command that will be excuted is sleep without parametes and this will result an error
+
+>>docker run ubuntu-sleeper 10 	## sleep 10 
+
+# if we want to give default parameter value
++++++++++++++
+ENTRYOINT 	["sleep"]
+CMD			["10"]
+++++++++++++
+# this way the run will be excuted and we can add parameters without crashing
+
+ ------- change ENTRYOINT ---
+ 
+ docker run --entrypoit sleep2.2 ubuntu-sleeper 10
+
+############################# NETWORKING ##################################
+
+--------- NETWORK types ---------------
+# bridge
+docker run ubuntu  # the container will be connected to virtual bridge network and will be assigned with automaically IP
+# hosts
+docker run ubuntu --network=host 	# the container will be conneted to host network directly (no internal IP and PORT) uses the same ports and IP of the host
+									# this way we cant run 2 instances of an continer on the same port
+# none
+docker run ubuntu --network=none	# the container will run isolated without network
+
+-------- Create new bridge ----
+
+docker network create --driver bridge --subnet 192.168.0.0/16 custom-network
+
+# list network
+docker network ls
+
+# inspect network
+docker inspect <container>
+
+------ Embeded DNS ----------
+
+# container can comnumcate with their names directy
+
+mysql.connect(172.17.0.5)  ## its not garanteed that the container will have the same IP once host reboots
+mysql.connect(mysql)
+
+DNS default IP >> 127.0.0.11
+
+############################# Storage ##################################
+# Docker is stored in the below dir on the host
+/var/lib/docker
+	aufs		# data about storage devices
+	containers	# data about containers
+	images		# data about images
+	volumes		# default volume dir
+	
+# WHY DOES DOCKER SAVES SAVES STORAGE EFFICENTLY
+# > dokcer uses layered structure to build and run an images
+# > each layer stores the differnce from the previous layer
+# > docker uses the shared layers in case of handling images that shares some layers (building an image after ubdating the code will use just differnce between source codes)
+#	since Base layer and depencies  are already stored
+# > after building the image a image layer is created and it is a read only layer and the data cant be changed
+# > when we run an container from that image, we create a new container images which is read/write layer. in case we wanted to change a file from the base image from the container
+#	we can but we acctully changing a copy of the file  (files in the image are the same)  <Copy-on-write>
+
+
+-------------------- create a volume ----------------
+docker volume create <volume> 	# this will create a volume under /var/lib/docker/volumes
+
+---------------------- mount volume ------------------
+
+docker run -v <volumeNAme>:/var/lib/....  <image name>
+docker run -v vol1:/var/lib/mysql mysql:5.6
+
+---------------------- bind mount ------------------
+# you can bind a vilume from any where of the host
+
+docker run -v /data/mysql:/var/lib/mysql mysql
+
+---------------------- best syntax ------------------
+docker run --mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql
+
+############################# docker link #################################
+# if we want that 2 containers access each others by their name we need to specify the link between them
+docker run -d--name=redis redis
+
+docker run -d --name=vote --link redis:redis voting_app
+
+# This will create a record in /etc/hosts in vote container and this way it can reach redis with its name
+
+############################# docker compose #################################
+ # Docker Compose is a way to create. a group of containers with one command
+ # first we create a YAML file and specify the images configuragions.
+ # Yamel have 3 versions. (version1, 2 and 3) with simple differencees
+
+-----------------------------
+|docker-compose.yml			|
+|----------------------------
+|redis:						|	#set container name
+|	image: redis			|	#set image name (to run) make sure it is available
+|db:						|
+|	image: postgres:94		|
+|							|
+|vote:						|
+|	image: voting_app		|
+|	ports:					|	#Set the ports and how are they connected
+|		-5000:80			|
+|	links:					|	#Set the links with other containers
+|		-redis				|
+|result:					|	
+|	build: ./result			|	#build is used to build an image, specify the folder that contains the Dockerfile 
+|	ports:					|	#Ports
+|		-5001:80			|
+|	links:					|	#Links
+|		-db					|
+|worker:					|
+|	build: ./worker			|	#another build
+|	links:					|	#Links
+|		-db					|
+|		-redis				|
+-----------------------------	
+
+============ Verions 2 ============
+# veriosn 1 is old and has some limitations.
+# veriosn 2 has extra features
+	> seperate the file to services and we need to specify version number
+	> we dont need links anymore, it is automatically added
+	> specify run order using depends_on
+--------------------------------
+|docker-compose.yml				|
+---------------------------------
+|version 					 	|	#Set Verions number
+|Services:						|	#Set services
+|	redis:						|
+|		image: redis			|
+|		networks:				|	#redis container will be connected to front-end network
+|			- back-end			|
+|	db:							|
+|		image: postgres:94		|
+|		networks:				|
+|			- front-end			|
+|								|
+|	vote:						|
+|		image: voting_app		|
+|		ports:					|
+|			-5000:80			|
+|		netorks:				|
+|			- front-end			|
+|			- back-end			|
+|	result:						|	
+|		build: ./result			|	
+|		ports:					|
+|			-5001:80			|
+|		networks:				|	
+|			-front-end			|
+|								|
+|	worker:						|
+|		build: ./worker			|
+|		depends_on:				|	#worker container will depend on redis
+|			- redis				|
+|		networks:				|	#set worker container to be part of 
+|			- back-end			|	#back-end network
+|								|
+|networks:						|	#define netorks
+|	front-end:					|	#first network
+|	back-end:					|	#second network
+---------------------------------
+
+
+
+# to start Docker compose
+
+docker-compose up
+
+# IMPORTANT NOTES
+# > dont use tabs (\t)
+# > put a space after each ":"
+# > put version number and docker image name in ""
+
+############################# docker registry #################################
+# docker registry is the place where docker images are stored and can be pulled and runned
+# when we call
+
+docker run nginx
+
+# we basically send a request to pull nginx image as below
+
+image: 	 docker.io/nginx/nginx
+		registry/useraccount/image_rep
+# so if we only added image name, docker will assume that the user account is the same name and it will use the default registry
+
+default registry: docker.io
+
+OTHTER REGISTRIES:
+	gcr.io # google registry
+------------ Private registry --------
+# we can install a private library it is available as a docker image 
+### Deploy###
+
+docekr run -d -p 5000:5000 --name registry registry:2		# run registry container
+docker image tag <imagename> localhost:5000/<imagename>	    # tag a local image to to the registru URL
+docker push localhost:5000/<imagename>	 localhost			# this will push the image to the registry
+docker pull localhost:5000/<imagename>	 		    	 	# use diffrent registry URL if there is not on localhost
+
+
+# if we want to use another regirsty we first need to login then use it
+
+docker login private-registry.io
+docker run private-registry.io/apps/internal-app
+
+############################# docker engine #################################
+# Dokcer engine is a set of tools 
+
+Docker CLI  	# is the command line interface that issues the command
+	|
+REST API		# sends CLI commands to the Daemon
+	|
+Docker Deamon  	# perform contairization 
+
+# we can a Docker CLI from another machins as below
+
+docker -H=192.168.0.11:2375 run nginx
+
+
+############ contairization #############
+
+# Docker performs contairization using namespace, each system runs process once starts 
+# PID1, PID2 ... PID6 the first process is always PID1
+# for Container Isolation we container should also have PIDs starts from 1 but this cant be possible 
+# you cant have 2 processes with the same PID
+# each process have 2 names (one related to the Host machine which the regular process ID and another one PID1 related from the container)
+# this way the container cant know its original PID and thinks that its PID starts with 1
+
+############################# cgroups #################################
+# this is a way to control docker resources consumptions
+
+docker run --cpus=.5 ubuntu # container cant consume more that 50% of CPU
+docker run --memory=100m ubuntu # container cant consume more that 100 MB of memory
+

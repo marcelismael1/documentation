@@ -1,0 +1,7 @@
+
+						## Subdomains ###
+						
+# a great tool to do this is knockpy and can be used as below.
+git clone https://github.com/guelfoweb/knock.git
+cd knock/knock.py
+python knock.py [target]

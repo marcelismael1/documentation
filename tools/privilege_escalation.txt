@@ -1,0 +1,7 @@
+# Every thing you need
+guif.re/linuxeop
+
+
+# Change DNS
+
+https://chryzsh.gitbooks.io/pentestbook/privilege_escalation_-_linux.html

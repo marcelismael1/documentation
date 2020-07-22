@@ -1,0 +1,6 @@
+#check actual content
+binwalk USB-stick.img
+
+#extract
+dd if=USB-stick.img of=/home/kali/tmp/outputFile bs=1 skip=jumpvalue count=$((bignum-smallnum))
+dd if=USB-stick.img of=/home/kali/tmp/outputFile bs=1 skip=22000 count=$((23500-22000))

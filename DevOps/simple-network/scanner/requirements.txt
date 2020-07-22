@@ -1,0 +1,6 @@
+json5==0.9.1
+jsonschema==3.2.0
+pymongo==3.10.1
+python-nmap==0.6.1
+slackclient==2.7.2
+

@@ -1,0 +1,7 @@
+nmap -p- <IP>
+nmap --top-ports=1000 -sS <IP>	#scantop ports
+nmap -p- -sS <IP> #all ports with service
+nmap -p80,443,22 -sC -sV <IP> #specific ports with script
+
+
+nmap -n -v -Pn -p- -A --reason -oN nmap.txt 192.168.30.129

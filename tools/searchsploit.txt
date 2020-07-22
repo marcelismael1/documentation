@@ -1,0 +1,3 @@
+sudo searchsploit kernel 4.19 linux
+
+searchsploit privilege | grep -i linux | grep -i kernel | grep 2.6

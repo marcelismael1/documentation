@@ -1,0 +1,32 @@
+version: "3"
+services:
+    scanner:
+        build: ./scanner
+        container_name: scanner
+        hostname: scanner
+    
+    mongodb-2:
+        image: mongo
+        container_name: mongodb-2
+        hostname: mongodb
+
+    domain1.com:
+        build: ./domain1.com
+        container_name: domain1.com
+        hostname: domain1.com
+
+    domain2.com:
+        build: ./domain2.com
+        container_name: domain2.com
+        hostname: domain2.com
+
+
+    domain3.com:
+        build: ./domain3.com
+        container_name: domain3.com
+        hostname: domain3.com
+
+    domain4.com:
+        build: ./domain4.com
+        container_name: domain4.com
+        hostname: domain4.com

@@ -1,0 +1,3 @@
+# to run quick and simple http server
+
+python -m SimpleHTTPServer 

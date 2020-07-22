@@ -1,0 +1,5 @@
+						## Sensetivetive file ###
+# a good tool to get sensetive files is dirb
+dirb [target] [wordlist] [options]
+dirb http://192.168.0.38/DVWA
+dirb http://192.168.0.38/DVWA /usr/shares/wordlist/...

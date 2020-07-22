@@ -1,0 +1,10 @@
+## To add user
+
+adduser --home /home/marcel marcel
+
+
+# To delete a user
+userdel marcel
+
+# add a user to a group
+usermod -a -G Group_name User_name

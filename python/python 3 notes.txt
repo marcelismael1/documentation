@@ -1,0 +1,924 @@
+#to view the type of a variable we use 
+type()
+
+#the data types are ( int, str, float, bool, list, set, tup)
+
+# to get the lenght of astring we use 
+len()
+
+#Strings indexing and slicing
+#lets assume S is our string
+
+#Indexing
+S[0]
+S[5]
+S[-1]  # backward indexing (0 -4 -3 -2 -1)
+
+#Slicing  String[start:stop:step]
+
+S[:] #all sting
+S[2:] #starting index 2 will the end
+S[:3] #Untill index 3 (3 not included)
+S[::] #all the string
+S[::2] # 2 step index
+S[5:15:3] # from index 5 till 15 with 3 steps
+
+#BONUS
+S[::-1] #an easy trick to flip the string backward
+
+
+#################################################
+                #Formating and Printing
+
+print('This is a string with an {}'.format('insert'))
+print('The {2} {1} {0}'.format('fox','brown','quick'))
+
+name = 'Fred'
+
+print(f"He said his name is {name}.")
+
+#Float Formating
+num = 23.45678
+print("My 10 character, four decimal number is:{0:10.4f}".format(num))
+print(f"My 10 character, four decimal number is:{num:{10}.{4}}")
+
+
+######################################################
+
+
+                    #Lists
+my_list = ['one','two','three',4,5]
+#Lists methods
+my_list.append()
+my_list.pop()
+my_list.sort()
+my_list.reverse()
+
+
+######################################################
+                    
+                    #dictionaries
+# UNORDERED
+my_dict = {'key1':'value1','key2':'value2'}
+my_dict = {'key1':123,'key2':[12,23,33],'key3':['item0','item1','item2']}
+my_dict['key1'] = my_dict['key1'] - 123
+
+d = {}
+d['animal'] = 'Dog'
+d['answer'] = 42
+d
+## Nesting with Dictionaries
+
+d = {'key1':{'nestkey':{'subnestkey':'value'}}}
+d['key1']['nestkey']['subnestkey']
+
+#Dictionary Methods
+d.keys()
+d.values()
+d.items()
+##################################################
+                
+                
+                ###Sting methods
+str.capitalize()
+str.title()
+str.isupper()   #return boolean value
+str.islower()   #return boolean value
+
+s = s.replace(' ','') # replace method
+str.startswith('y')
+
+
+#######################################################
+
+                    
+                    
+                    #Tuples
+# it is just like list but you cant change its values
+t=(1,2,3,4)
+t[0]
+t[-1]
+
+t[0]= 'change'  ## ERROR
+t.append('nope')  ##ERROR
+
+#Tuples Methods
+t.index('1')   #Index of value 1
+t.count('1')    #count of 1
+
+
+
+#######################################################
+
+                    
+                    # Sets
+# UNORDERED Collection of UNIQUE elemenst
+
+myset= set()
+myset.add(1)
+myset(1)
+List = [1,1,1,2,2,2,3,3,3]
+myset [List]  ## {1,2,3}
+
+
+
+##########################################################
+                
+                
+                #Dealing With FILES
+#Modes 
+mode = 'r'  #read only
+mode = 'w'  # Write only
+mode = 'a'  #append
+mode = 'r+' #Read and Write
+mode = 'w+' #Write and Read
+
+myfile = open ('test.txt', mode = 'r')
+myfile.read()
+myfile.seek(0)
+myfile.close()
+#we cant write in this mode we have to close the file
+
+myfile = open ('test.txt', mode = 'w')
+
+### Another Way NO NEED TO CLOSE THE FILE OR SEEK THE BEGINNING
+
+#READ
+with open ('test.txt', mode = 'r') as f:
+    print(f.read())
+#WRITE
+with open ('test.txt', mode = 'w') as f:
+    f.write('TEXT IS HERE')   
+#APPEND
+with open ('test.txt', mode = 'a') as f:
+    f.write('TEXT IS HERE')   
+
+
+
+###########################################################
+
+                        #Comparision
+ 1 > 2
+ 1< 2
+ 1 == 1
+ 1 != 2
+ 1 <= 2
+ 1 >= 2
+ 
+not 1 ==1
+1 == 1 and 1 < 2
+1 == 1 or 1 < 2
+
+
+
+###################################################
+                
+                
+                # IF Statment
+
+if Condition:
+    Statment
+elif Condition2:
+    Statment
+else:
+    Statment
+    
+    
+#################################################
+
+                
+                
+                #FOR Statment
+for num in list1:
+    print(num)
+
+for letter in 'This is a string.':
+    print(letter)
+
+list2 = [(2,4),(6,8),(10,12)]
+for tup in list2:
+    print(tup)
+
+# Now with unpacking!
+for (t1,t2) in list2:
+    print(t1)
+    
+
+d = {'k1':1,'k2':2,'k3':3}
+for item in d:
+    print(item)
+    
+# Dictionary unpacking
+for k,v in d.items():
+    print(k)
+    print(v) 
+    
+    
+    
+####################################################
+
+                
+                # While statment
+
+x=0 
+
+while x <5:
+    print(x)
+    x+=1 # the same as x=x+1
+    
+while x <5 :
+    #just a comment
+    pass # will do nothing, but it is used to avoid syntax problems.
+    continue  # will continue to next phase of the loop
+    break # Will break from the loop
+    
+    
+    
+#######################################
+
+            
+            #USEFUL OPERAATORS
+
+range(0,101,10)  #range(lower, upper, limit) but it is a genrator
+list (range(0,101,10)
+
+list(enumerate('abcde'))    #genration function that will change the value of a sting into a list of tuples 
+                            #[(0, 'a'), (1, 'b'), (2, 'c'), (3, 'd'), (4, 'e')]
+                            # So it is used as a tracker or counter
+                            
+list(zip(mylist1,mylist2))  #Opposite of enumerate, it zips multiple list into list of tuples with the adjacent numbers
+                            #of each list [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')]
+
+'x' in ['x','y','z']        #It will return a boolian value whether x in the list
+'x' in 'text example'       #It will return a boolian value whether x in the sting
+'x' in {'x':AA, 'c':sss}    #It will return a boolian value whether x in the the keys
+'x' in d.values()           #It will return a boolian value whether x in the values of the dictionary data
+
+mylist = [10,20,30,40,100]
+min(mylist)
+max(mylist)
+
+input('Enter Something into this box: ')          # it is used to get user input into STRING
+int(input('Enter Something into this box: '))     #since inpute takes the value as a string we need to make it an INTEGER  
+float (input('Enter Something into this box: '))  # Same as int example
+
+str.split() #split the strig into list of string
+abs(50)     #finds the absolute value
+sum(list)       #
+
+
+
+###############################################
+
+                    
+                    # RANDOM LIBRARY
+
+from random import shuffle
+shuffle(mylist)      # it will return nothing but it will shuffle the order of list
+
+from random import randint
+randint(0,100)      #will return a random number between 0 and 100
+
+
+########################################
+                
+                
+                LIST COMPREHUNSION
+
+lst = [x for x in 'word']
+lst = [x**2 for x in range(0,11)]
+lst = [x for x in range(11) if x % 2 == 0]
+lst = [ x**2 for x in [x**2 for x in range(11)]]
+
+                Dictionary comprehension
+L = [1,2,3,4,5,6,7,8,9]
+{key:value for value,key in enumerate(L)}
+
+
+####################################
+                    
+                    
+                    
+                    #Functions
+def name_of_function(arg1,arg2):
+    '''
+    This is where the function's Document String (docstring) goes
+    '''
+    # Do stuff here
+    # Return desired result
+    
+def pig(w):
+    if w[0] in ['a','e', 'i', 'u']:
+        w2 = w +'ay'
+    else:
+        w2 = w[1:]+w[0]+'ay'
+    return w2
+
+
+####CHECK FOR PRIME########
+m= int (input("ENTER YOUR NUMBER: "))
+def prime(n):
+    sqr = int(n**0.5)
+
+    for x in range(2,sqr+1):
+        if n % x == 0:
+            return False
+    else:
+        return True
+prime(m)
+
+
+###########################################
+                
+                
+                
+                # ARGUMENTS and KEYWORD ARGUMENTS
+# Important and usful way to insert arguments into function with different sizes
+# *arg is used to insert tuples
+# **kwarg is used to insert dictionaries
+
+def func (*arg):
+    print (arg)
+func (1,2,3,4,5)  # the output is a tuple (1,2,3,4,5)
+
+def func (**kwarg):
+    print (kwarg)
+func (a = 1 , b = 2)  # the output is a dictionary {'a':1 , 'b' : 2}
+# we can use these data however we want inside the function,
+
+##EXAMPLE
+def myfunc(*args, **kwargs):
+    if 'fruit' and 'juice' in kwargs:
+        print(f"I like {' and '.join(args)} and my favorite fruit is {kwargs['fruit']}")
+        print(f"May I have some {kwargs['juice']} juice?")
+    else:
+        pass
+        
+myfunc('eggs','spam',fruit='cherries',juice='orange')
+##OUTPUT
+#I like eggs and spam and my favorite fruit is cherries
+#May I have some orange juice?
+
+
+
+###########################################
+                    
+                    
+                    # LAMBDA Expression and special functions
+
+list (map (fucntion , Iterable_Object))     # the functions will be excuted for every item in the object
+list (filter (func , iterable_Object))      # the func must return boolean value and by applying the fucntion on the obects
+                                            # it will only return the True values so it fitlres them
+
+from functools import reduce
+reduce (func , iterable_Object)             # reduce will make repeated operation to reduce the list (iterable_Object)
+                                            # by applying function operation on the first 2 objects then the th result
+                                            # of the operation will replce the 1st and 2nd value and this operation will
+                                            # untill having one value
+# lambda expression, is a way to transform simple fucntions to single expression so it can be used in other fucntions
+def square(num):        # Normal function and it can be called like square (num)
+    result = num**2
+    return result
+    
+lambda num : num**2     # and it can be passed in fucntions
+square = lambda num : num**2 # it can be called like square (num)
+
+list(map(lambda num: num ** 2, my_nums))        # map example
+list(filter(lambda n: n % 2 == 0,nums))         #Filter example
+reduce ( lambda a,b : a+b , list)               # Reduce Example
+
+#____________________________________________________________________#
+
+
+                    # ALL() and ANY ()
+
+#all() and any() are built-in functions in Python that allow us to 
+#conveniently check for boolean matching in an iterable
+lst = [True,True,False,True]
+all(lst)
+False
+
+any(lst)
+True
+#####################
+
+
+                    #COMPLEX###
+complex(2,3)
+2+3j
+complex(10,1)
+10+1j
+complex('12+2j')
+12+2j
+
+##################################################
+
+                    
+                    #### SPACE VARIABLE###########
+#LEGB Rule:
+#L: Local — Names assigned in any way within a function (def or lambda), and not declared global in that function.
+#E: Enclosing function locals — Names in the local scope of any and all enclosing functions (def or lambda), from inner to outer.
+#G: Global (module) — Names assigned at the top-level of a module file, or declared global in a def within the file.
+#B: Built-in (Python) — Names preassigned in the built-in names module : open, range, SyntaxError,...
+
+global x # a statment that is used to access global variables in local or enclosed scope
+
+##########################################
+
+
+######################################
+
+# The below example represents a new method of defining functions 
+# it is called ArgumentParser
+# you can add to your code arguments and call the code with these args
+# and yune the program to do what ever you want accrding to the value of args
+#
+#
+# 
+
+from argparse import ArgumentParser
+
+if __name__ == '__main__':
+    parser = ArgumentParser( description='Process some integers.')
+    parser.add_argument("-n", "--name", dest="person_name", required=True)
+    parser.add_argument("-a", "--age", dest="person_age", required=False)
+    parser.add_argument('-q', action='store_true')
+    args = parser.parse_args()
+    
+    
+    if args.q:
+        print(f'my name is {args.person_name} and I am {args.person_age} years old')
+    else:
+        print(f'name: {args.person_name} age: {args.person_age}')
+        
+
+#python dest.py -n marcel -a 30 -q
+
+####################################################
+
+                    
+                    
+                    #############CLASSES#############################
+
+##An attribute is a characteristic of an object. A method is an operation we can perform with the object.
+#For example, we can create a class called Dog. An attribute of a dog may be its breed or its name,
+# while a method of a dog may be defined by a .bark() method which returns a sound.
+
+###ATTREIBUTE
+
+class Dog:
+    def __init__(self,breed):   # breed is a parameter we will enter 
+        self.breed = breed      # self.breed this is the attribute name, = breed is the same as the above breed 
+        # we can give the parameeter a diffrent name from the attribute  but it is more convenient like this
+        
+sam = Dog(breed='Lab')
+frank = Dog('Huskie')
+
+sam.breed = Huskie #Note how we don't have any parentheses after breed; this is because it is an attribute and doesn't take any arguments.
+##############################
+class Dog:
+    
+    # Class Object Attribute
+    species = 'mammal'
+    
+    def __init__(self,breed,name):
+        self.breed = breed
+        self.name = name
+
+d = Dog('lab', 'boby')
+
+###### Methods ####
+# Methods are functions inside a class, that makes operations on cals attributes or other para meters
+
+class Dog ():
+    species = 'Kleeb'
+    def __init__(self, breed,name  ):
+        self.breed = breed
+        self.name = name
+    
+    def bark(self, number):
+        
+        print('WOOF '*number, self.name)
+        
+ #NOTES
+ # We should use self.attribute
+ # We only provide number because it a parameter and not class attribute
+ 
+ 
+ class Circle:
+    pi = 3.14           # Class attribute
+
+    
+    def __init__(self, radius=1):   # we can give default value of the attribute but it can be changed
+        self.radius = radius 
+        self.area = radius * radius * Circle.pi  # We can define attribute inside __init__
+                                    # we can call class attribute 2 ways self.class_att_name or ClassName.att_name
+                                    # it is better to call it with class name because it bee easier to know that it is 
+                                    # a class attributeand not regular attribute
+
+    # Method for resetting Radius
+    def setRadius(self, new_radius):
+        self.radius = new_radius
+        self.area = new_radius * new_radius * self.pi
+
+    # Method for getting Circumference
+    def getCircumference(self):
+        return self.radius * self.pi * 2
+
+
+c = Circle()            # radius have a default value so no need to put it if we dont want to change it and defining C like this will not
+                        # cause any ERROR
+
+print('Radius is: ',c.radius)
+print('Area is: ',c.area)
+print('Circumference is: ',c.getCircumference())
+
+# NOTE :
+# once you create new instance of a class for example
+d = Dog()
+# the __init__ method will be called immediatly
+#####################################################
+
+                   
+                    ############INHERITANCE#########
+## it is used to have the methods of a certain class used in another class
+class Animal:       #######BASE CLASS
+    def __init__(self):
+        print("Animal created")
+
+    def whoAmI(self):
+        print("Animal")
+
+    def eat(self):
+        print("Eating")
+
+
+class Dog(Animal):          #####New Class
+    def __init__(self):
+        Animal.__init__(self)       ##we have to add this line to call __init__  Animal class
+        print("Dog created")
+
+    def whoAmI(self):               ##you can overwrite method
+        print("Dog")    
+
+    def bark(self):                 ##you can create new methods
+        print("Woof!")
+
+##############################
+                                
+                                
+                                #### POLYMORPHISM####
+#polymorphism refers to the way in which different object classes can share the same method name
+
+                                
+                                ########ABSTRACT CLASS####
+ #An abstract class is one that never expects to be inisiated.
+ class Animal:
+    def __init__(self, name):    # Constructor of the class
+        self.name = name
+
+    def speak(self):              # Abstract method, defined by convention only
+        raise NotImplementedError("Subclass must implement abstract method")
+        
+################### 
+                                
+                                
+                                ### Special method ###       
+__init__()  # Trigers when you create new istance
+__str__()   # Trigers when you call print(instance)
+__len__()   # Trigers when you call the len function on an instance
+__del__()   # Trigers when you delete an instance
+
+class Book:
+    def __init__(self, title, author, pages):
+        print("A book is created")
+        self.title = title
+        self.author = author
+        self.pages = pages
+
+    def __str__(self):
+        return "Title: %s, author: %s, pages: %s" %(self.title, self.author, self.pages)
+
+    def __len__(self):
+        return self.pages
+
+    def __del__(self):
+        print("A book is destroyed")
+#######################################        
+
+                            
+                            
+                            ## Packages and Modules
+
+# Modues : is a .py file which contains functions and youi can call these functions from another .py file
+from  MyModule import MyFunction
+MyFunction()
+
+# Packages is aset of modules and orgnised in folders and subfolders
+# you have to create __init__.py file in each directory in order to be identified as package
+# and the packages and subpackages can be called like below:
+ from MainPackage import MainScript
+
+ from MainPackage.SubPackage import SubScript
+ 
+ MainScript.MyMainFunction()
+ SubScript.SubFunction()
+
+# You can explor a modlue by typing
+print(dir(module))
+# You can view certain function discription
+help(module.function)
+
+######################################
+        
+                                
+                                
+                                ######## __name__  ####
+
+# __name__ is per defined variable in python
+# when you run a program this variable has one value '__main__'
+# Sbut when you call the code as a module __name__ will not have this value
+# so in order to perventing any code from being excuted when calling a .py as a module
+# we can seperate the code to two sections 
+
+def func(n=1):                                 ### this section for function difintion
+    print("this func in one.py and the number is ",n)
+    
+
+if __name__ == '__main__':
+    
+    func(10000000)                             ###Instrctions will only be excuted 
+                                               ###if the code was called directly
+
+###########################################
+                                             
+                            
+                            
+                            ##TRY ## EXCEPT ### FINALLY
+try:                            ##Tesst the correct excusion of a code
+    f = open('testfile','w')
+    f.write('Test write this')
+except IOError:                 # The below block of code will be excuted if there is and IOError
+    print("Error: Could not find file or read data")
+else:                           # This block of code will be excuted if there is no error
+    print("Content written successfully")
+    f.close()
+#--------------------------------------------|#
+def askint():
+    while True:             ### Test untill you have no error
+        try:
+            val = int(input("Please enter an integer: "))
+        except:             ## if there is an error excut
+            print("Looks like you did not enter an integer!")
+            continue
+        else:               # if threre is no error you excute the following (Break to exit the loop)
+            print("Yep that's an integer!")
+            print(val)
+            break
+        finally:            # will always run
+       
+            print("Finally, I executed!")
+
+#===============================================#            
+                            
+                            
+                            
+                            #### RAISE ERROR###
+# You can push errors when ever you want
+raise OSError('ERRRRRRRRRRRRRRROOOOOOOOO')
+
+# we can specify any error type
+
+            
+################################################    
+
+
+                                    
+                                    #####TESTING
+
+import pylint
+## this is a testing library taht allows you to find errors and even formating errors
+# from terminal run
+pylint script.py
+
+#-*---------------------------------------------------------------------------------#
+## how to write Unit test ###
+
+import unittest
+import tested_script
+
+class testcap(unittest.TestCase):       ### create test class and call (unittest.TestCase)
+    def test_one_word(self):            ##first test function
+        text = 'python'                 
+        result = tested_script.cap_text(text)   ## we call the tested function
+        self.assertEqual(result,'Python')       ## we set testing parameters
+        
+    def test_multiple_words(self):              ## test #2
+        text = 'month python'
+        result = tested_script.cap_text(text)
+        self.assertEqual(result,'Month Python')
+
+if __name__ == '__main__':                      ##call unit test main()
+    unittest.main()        
+
+##########################################################
+
+
+            ### globals(), locals()
+## to funvtions that retruns global and local functions
+
+###########################################################
+
+
+                        #DECORATORS
+# in some cases we need to decorate a functions(add some extra code before or after it.
+# and threre is an easy way to do it which is to write deceroator fucntion that takes 
+# functions as parameter
+
+## Functions can be returned , passed or assigned
+
+# assigned
+def hello(name='Jose'):
+    return 'Hello '+name
+greet = hello               # now greet == hello even if hello was deleted
+greet()                     # call the new func
+
+# returned
+def hello(name='Jose'):
+    
+    def greet():
+        return '\t This is inside the greet() function'
+    
+    def welcome():
+        return "\t This is inside the welcome() function"
+    
+    if name == 'Jose':
+        return greet
+    else:
+        return welcome
+#################
+x = hello()             # now x == greet and cn be called x()
+x = hello('Mark')       # now x  == welcome and can be called x()
+
+# Passed
+def func(passed_func):
+    return passed func
+
+x = func(hello)         # x now == hello and can be called as x()
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#### Nested FUINCTIONS
+# the functions that created inside another functuins canot be accessed from outside directly
+# instead we can make the parent function return them
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++           
+
+def new_decorator(func):    # we pass the function that needs decoration to the decorator
+    def wrap_func():
+        print("Code would be here, before executing the func")
+        func()              # the function that will be decorated
+        print("Code here will execute after the func()")
+
+    return wrap_func        # returns the wraper function
+
+def func_needs_decorator():
+    print("This function is in need of a Decorator")
+## if we want to decorat func_needs_decorator we do the following
+func_needs_decorator = new_decorator(func_needs_decorator)
+# we call the deceroator and pass the func_needs_decorator to it
+
+#___________________________________________________________________________________
+
+
+                    ## FINAL FORM ###
+@new_decorator              ## Decorator name adding this line will initite the decorator automatically for the next func
+def func_needs_decorator():
+    print("This function is in need of a Decorator")
+#_++_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_
+
+
+                        ### Generators#####    
+
+#Iterators and Generators#####
+
+# Generators are functions that that can send back a value and then later resume to pick up where it left off. 
+#allowing us to generate a sequence of values over time. The main difference in syntax will be the use of a yield statement.
+#generator function is compiled they become an object that supports an iteration protocol   
+#the generator computes one value and then suspends its activity awaiting the next instruction. This feature is known as state suspension.
+
+def gencubes(n):
+    for num in range(n):
+        yield num**3
+
+#in the above code gencubes will be an "ITERABLE" object and can be called lije range()
+
+ for x in gencubes(10):
+    print(x)
+
+## The key advantae of generators is that we dont have to store big values in memerory, generators needs only to know
+# the last value and equasion to produce the next one.
+
+                        ###next() and iter() ###
+                        
+g = gencubes        ### gencubes is a generator
+next(g)             ### next will gernerate the next yield value1
+
+# After the final value next will give and error, but for loop will catch it and will not give an error
+# |||StopIteration|||
+
+#|||NOTE||||#
+
+# Stirngs are iterable but they are not iterators. this means
+A = 'HELLO'
+next (A)        # will give an error
+A_iter = iter(A)         # will make A a str_iterable
+next (A_iter)        # will iter over A, and will give StopIteration error at the end of A.
+
+
+                            ##Generators comprehension##
+# The same syntax as Kist comprehension, but with ()
+my_list = [1,2,3,4,5]
+gencomp = (item for item in my_list if item > 3)        # gencomp is a generator
+ 
+#===================================================================================#
+
+#Learn Python
+
+
+
+# To check the dir of the file that is being executed
+
+import os
+print(os.path.dirname(os.path.realpath(__file__)))
+
+
+################################
+#To get the time
+
+import time
+time.asctime()
+
+import datetime
+datetime.datetime.utcnow().isoformat()
+##############
+
+#Config parser
+
+# this is used to use configutation files and take the configurations easilly
+
+# 1>>> set a config file for example /mydir/file.ini
+
+[stu]
+name = marcel
+age = 28
+wieght = 85
+
+[database]
+server = 192.168.1.1
+username = root
+password = 1234
+
+# 2>>> in python code you write
+
+import configparser # call the librar y
+
+config = configparser.ConfigParser()    # make config parser instance
+config.read('config.ini')               # read the config file
+
+address = config['api']['slack']        # read slack value from [api]
+name = config['stu']['name']
+age = config['stu']['age']
+
+print(address,age,name)
+#+++++++++++++++++++++++++++++++++++++++++++++#
+
+                #Capture and log errors
+    try:
+        solr.add(cache_okta_events)
+    except Exception as e:
+        common.log('<hermione/saveToSolr> EXCEPTION: ' + str(e))
+
+#+++++++++++++++++++++++++++++++++++++++++++++#
+
+                #*args and **kwargs
+# args are used to pass tuples to function with diffirent sizes
+# kwargs are used to pass dics to the function with diffirent sizes
+
+def d(*args,**kwargs):
+    print('args:',args)
+    print('kwargs',kwargs)
+
+d(*(1,2,3,4,5,6),**{'a':1,'b':2})
+#output
+
+args: (1, 2, 3, 4, 5, 6)
+kwargs {'a': 1, 'b': 2}
+
+#+++++++++++++++++++++++++++++++++++++++++++++#
+
+
+
+
+
+                        
+    

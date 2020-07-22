@@ -1,0 +1,6 @@
+# some time we have a boot problem and we face busy message and terminal
+
+1> exit
+2> capter the partition that makes an issue , example: /dev/sda1
+
+fsck -y /dev/sda1

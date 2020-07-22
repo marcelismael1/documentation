@@ -1,0 +1,5 @@
+https://www.hackingarticles.in/beginners-guide-to-impacket-tool-kit-part-1/
+
+git clone https://github.com/SecureAuthCorp/impacket.git
+cd impacket/
+python setup.py install

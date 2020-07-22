@@ -1,0 +1,30 @@
+# TO install t virtual environoment for python
+https://docs.python-guide.org/dev/virtualenvs/
+
+pip install virtualenv
+
+# to creat it cd to the desired dir
+
+virtualenv venv
+
+#>>>>> IMPORTANT NOTE: we can create the env with no packages with the option 
+--no-site-packages
+
+# > first we activate it 
+
+./venv/bin/activate
+source ./venv/bin/activate
+
+# >. now we can install packages using pip
+pip install flask # and example
+
+# the packages installed in the virtual env will not be available for the whole python intereptor
+# we can save the insalled packages to use them in another env
+ pip freeze > requirements.txt
+ # on the new env
+ pip install -r requirements.txt
+
+ # > to exit the virtual env
+
+decativate
+
