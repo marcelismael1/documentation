@@ -86,3 +86,20 @@ wboyd3c.mylabserver.com   NotReady   <none>   31s     v1.12.2
 
 ----------------------------- Configure Network ---------------------------
 
+# K8 support a lot of network pluggins and we can configure networking by a lot of ways
+# we will use FLANNEL which is a network configuration pluggin.
+
+# 1) run the below codes in each node
+echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf # put the value "net.bridge.bridge-nf-call-iptables=1" in /etc/sysctl.conf
+sudo sysctl -p  # run sysctl to take effect immediately
+
+# 2) run the below comand on Master node ONLY
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/bc79dd1505b0c8681ece4de4c0d86c5cd2643275/Documentation/kube-flannel.yml
+# this will laod YAML file from the link (-f option) and configure the network using flannel configuration
+# 3) we can check the network is running by using 
+kubectl get nodes   # we can see that all nodes are ready
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                    Kubernetes Cluster is READY
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+                    

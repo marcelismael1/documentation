@@ -61,9 +61,9 @@ docker run -it <image name>
 # Each container is treated as isolated intit >> it has it own IP and PORT, these ports and IPs can be accessed from docker hosts
 # we can map the container port to an external port 
 
-docker rum -p 80:5000 nginx  		# Run nginx on port 80 and give it port 5000  								>>IP1:5000
-docker rum -p 8080:5000 nginx  		# Run another instance of nginx on port 8080 and give it port 5000			>>IP2:5000
-docker rum -p 8081:5000 nginx  		# Run yet another instance of nginx on port 8081 and give it port 5000		>>IP3:5000
+docker run -p 80:5000 nginx  		# Run nginx on port 80 and give it port 5000  								>>IP1:5000
+docker run -p 8080:5000 nginx  		# Run another instance of nginx on port 8080 and give it port 5000			>>IP2:5000
+docker run -p 8081:5000 nginx  		# Run yet another instance of nginx on port 8081 and give it port 5000		>>IP3:5000
 # from the out side we see ports 80 ,  8080 , 8081 opened with seperated nginx instances on each one.
 
 #%%%%% NOTE  :  We cant map 2 containers to the same external port
