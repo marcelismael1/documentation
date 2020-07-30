@@ -102,4 +102,65 @@ kubectl get nodes   # we can see that all nodes are ready
                     Kubernetes Cluster is READY
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+------------------------------ 'PODS' ----------------------------------------
+
+# Pods are the basic block in K8
+# a pod can contain more that one container Usually 1
+# each pod have an ip from  K8 network (10.244.0.0/16) in our example
                     
+# to create a pod
+ kubectl create -f <podfile.yml>
+
+ # the yml file looks something like this
+
+ apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+
+# to view the running pods
+
+kubectl get pods
+
+# view the pods that related to system 
+kubectl get pods -n kube-system
+
+# pods are seperated by name space and to use this we do
+kubectl get pods --all-namespaces
+
+# get details about a pod (inculding event list)
+kubectl describe pod <pod_name>
+kubectl describe pod nginx
+
+# describe a pod running in a namespace
+kubectl describe pod <pod_name> -n <namespace>
+
+# NOTE:   we can get details about different K8 objects like services by describe
+
+# to delete a pod
+
+kubectl delete pod <pod_name>
+kubectl delete pod nginx
+
+------------------------------ 'Clustering and Nodes' -------------------
+# previously we build a cluster and now we have a master and 2 worker nodes 
+# the pods will run on worker nodes
+
+# simple cluster consists of 3 node:
+ ------			 --------        --------
+|Master|		|.Worker.|		|.Worker.|
+ ------			 --------        --------
+ API			  Pod  	       	   Pod
+ Control          Pod          	   Pod
+ Panel
+
+# get list of nodes
+kubectl get nodes
+
+# get node details
+kubectl describe node $node_name
+
