@@ -125,6 +125,8 @@ spec:
 # to view the running pods
 
 kubectl get pods
+kubectl get pods -o wide  # more details
+
 
 # view the pods that related to system 
 kubectl get pods -n kube-system
@@ -164,3 +166,18 @@ kubectl get nodes
 # get node details
 kubectl describe node $node_name
 
+ ---------------------------------- 'Networking in Kubernetes' -------------------
+
+ # K8 have all the pods connected to virtual network in a way that even if  pods are on different nodes 
+ # they can communicate using the pods ip address
+
+ # there are alot of plugins that can do that, and Flannel is one of them
+
+
+# we can test that by creating several pods and try to excute some commands from one of them towards the others
+# using thier ip 
+# lets suppose we have busybox that can run ;'curl' and nginx pod
+
+kubectl exec <pod_name> -- <command>
+
+kubectl exec busybox -- curl <nginx_ip>
