@@ -181,3 +181,118 @@ kubectl describe node $node_name
 kubectl exec <pod_name> -- <command>
 
 kubectl exec busybox -- curl <nginx_ip>
+
+-------------------------------------' Kubernetes Architecture and Components ' ----------------
+# if we ran  the below command I will get the list of pods that represent the system pods and components
+kubectl get pods -n kube-system
+
+# Core DNS , Dns for other nodes
+coredns-5d4dd4b4db-7qdbc           node2   
+coredns-5d4dd4b4db-8mr4n           node2   
+
+# etcd is a pod that runs on the master and it porvides distributed sync data storage for the cluster
+etcd-master1                       master1 
+
+# API server .K8s API which is the primary interfaace for the cluster
+kube-apiserver-master1             master1 
+
+# Controller Manager- Bubdles several components into package
+kube-controller-manager-master1    master1 
+
+# This is the network plugin pod(one for each node)
+kube-flannel-ds-amd64-4nrlt        node1   
+kube-flannel-ds-amd64-52dns        master1 
+kube-flannel-ds-amd64-kz8fx        node2   
+
+# Proxy pod, once for each node, handles network communiction betwwen pods, ny setting routing firewall rules
+kube-proxy-25j95                   node1   
+kube-proxy-7cx4r                   master1 
+kube-proxy-p2pv8                   node2   
+	
+# Master Scheduler , which Schedules the creation and deletion of pods
+kube-scheduler-master1             master1 
+
+############## ' kubelet'########
+# Kublet is K8s engin the means that it is the component that works as the cbridge between docker and other components
+# so it manages pods (this means it is not a pod) it runs as a process
+
+sudo systemctl status kubelet
+
+
+-------------------------------------------' Kubernetes Deployments' --------------------------------
+# Deployments are a K8s object that represents a set of rules it is great for automating the deployment of pods with deployment you can
+# specify a desired state in which you want your pods to be in and it is useful to in the below cases.
+
+# >>> Scaling: you can specify the number of replicas and k8s will maintain this number
+# >>> Rolling Updates: we can change the deplyment version to new image. the dyployment will gradually change the version of the images to new one
+# >>> Self-Healing: if one pod was damaged the dyployment will automatically spin new one
+
+# EXAMPLE
+
+apiVersion: apps/v1
+kind: Deployment    # object type
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx    # label
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx       # replicas LABEL (important)
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.15.4
+        ports:
+        - containerPort: 80
+
+ # in this deployment we have 2 replicas of nginx at it will maintain the number
+kubectl get deployments  		# View all Deployments
+
+kubectl describe deployment nginx-deployment		# get additional information about the deployment
+
+kubectl delete deployment nginx-deployment			# will delete the deployment
+
+# if we tried and deleted a pod and checked the pods again the same numnber of replicas will remain
+
+
+------------------------------------------- ' Kubernetes Services' --------------------------------------------------
+# K8s services are another component of kubernetes, it is very importantin deploying apps
+# Since replication pods are ofter created and destroyed, services provide a way of communicating with a set of pods
+# it creates a layer of communication with the pods, so you can communicate with service insead of the replicas
+
+kind: Service    # object kind
+apiVersion: v1
+metadata:
+  name: nginx-service  # name of service
+spec:
+  selector:            # what are the label of replicas to connect to
+    app: nginx
+  ports:
+  - protocol: TCP		# protocol
+    port: 80			# internal port (node port)
+    targetPort: 80		# 
+    nodePort: 30080		# exposed port
+  type: nodePort   	    # type of service
+ 
+
+kubectl create -f test_service.yml   # create a service
+
+kubectl get svc                      # list services
+
+
+NAME            TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes      ClusterIP   10.96.0.1        <none>        443/TCP        4d19h				# Kubernetes cluster API service
+nginx-service   NodePort    10.108.113.209   <none>        80:30080/TCP   10s				# newly added service
+
+# now the cluster have nginx service on port 30080, when trying to communicate with any node of the cluster on 30080  arequest to nginx nodes will be sent to handle it
+
+curl localhost:30080
+ <nginx server response>
+
+ ---------------------------------------
