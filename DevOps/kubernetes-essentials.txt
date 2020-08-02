@@ -295,4 +295,26 @@ nginx-service   NodePort    10.108.113.209   <none>        80:30080/TCP   10s			
 curl localhost:30080
  <nginx server response>
 
- ---------------------------------------
+# Delete a service
+kubectl delete svc nginx-service
+
+ ---------------------------------------  ' Deploying the Robot Shop App ' -------------------------------------
+
+ # to create a microservice application it is very easy with K8s. we will take the below example
+git clone https://github.com/linuxacademy/robot-shop.git  # get the microservice test app
+
+kubectl create namespace robot-shop  # create a name space to isolate the app in the namespace
+kubectl -n robot-shop create -f ~/robot-shop/K8s/descriptors/			# run all deployments and services
+
+
+kubectl get pods -n robot-shop -w     # -w option to watch the status of the pods
+
+http://$kube_server_public_ip:30080		# and just like that the app is running
+
+-----------------------------------------------------------------------------------------------------------------
+# Deleting Resources
+# delete all
+kubectl -n my-ns delete pod --all
+kubectl -n my-ns delete svc --all 
+kubectl -n my-ns delete deployment --all 
+kubectl -n my-ns delete pod,svc,deployment --all 
