@@ -1,0 +1,210 @@
+# Ansible
+Ansible
+https://www.udemy.com/course/learn-ansible/
+
+------------------------------------------- 'Install Ansible' ----------------
+sudo yum install epel-release    # add epel repo
+yum install ansible
+
+# Agentless (ssh, powershell connection)
+
+-----------------------------' Inventory'---------------------------------------
+# Since ansible is agentless, it connectst to targeted hosts via SSH or powershell
+# and the list of hosts are saved in an inventory file, the default location of the
+# inventory file is in
+/etc/ansible/host
+
+# inventory file form as below
+
+==========================
+# samble inventory file
+
+server1.domain.com
+server2.domain.com
+
+# save domain list as groups
+[mail]
+server3.domain.com
+server4.domain.com
+
+[db]
+server5.domain.com
+server6.domain.com
+
+[web]
+server7.domain.com
+server8.domain.com
+
+# and we can create a group of groups
+[all_servers:children]
+mail
+db
+web
+============================
+
+# the inventory file takes additional parameters
+ansible_connection=ssh/winrm/localhost   	# defines connection type
+ansible_port=2/5986							# defines port number
+ansible_user=root/administartor				# defines user
+ansible_ssh_pass=mypassword					# defines ssh password
+
+===============================
+# sample ansible file
+web2   ansible_host=server1.domain.com ansible_connection=ssh  ansible_user=root
+db     ansible_host=server1.domain.com ansible_connection=ssh  ansible_ssh_pass=mypassword
+mail   ansible_host=server1.domain.com ansible_connection=winrm ansible_user=administartor
+web2   ansible_host=server1.domain.com ansible_connection=winrm
+
+localhost ansible_connection=localhost
+==================================
+
+# test we create an inventory file with the following input
+target1 ansible_host=192.168.0.220 ansible_ssh_pass=mypas
+target1 ansible_host=192.168.0.66 ansible_ssh_pass=mypas
+
+# to check the connection we run ping module with the inventory file
+ansible target1 -m ping -i inventory.txt
+
+####### NOTE:
+# if it is the first time trying to connect to the target, with password we need to accept the key host
+# so you need to connect to target 1 via ssh and accept the key. or disable this option <host_key_checking> from
+/etc/ansible/ansible.cfg
+
+------------------------------------------------ 'What is YAML' --------------------------------------
+# yaml have diffrent types of data structures
+
+# 1- Key Value Pair
+Fruite: Apple
+Meat: Chicken
+Vegetables: carrot
+Liquid: Water
+# NOTES: you should add a spcae after the ":"
+
+# 2 - Array or list
+Fruits:
+-   Orange
+-   Apple
+-   Banana
+
+Vegetables:
+-   Carrot
+-   Tomato
+-   ASdSAd
+# NOTe: we should have the amount of spaces to have the same indent
+
+
+# 3- Dictionary
+Banana:
+    Calories: 105
+    Fat: 0.4 g
+    Carbs: 27 g
+
+Grapes:
+    Calories: 62
+    Fat: 0.3 g
+    Carbs: 16 g
+# Note: Keep indentation
+=======================================
+# Key value dictionary/list
+Fruits:
+    -   Banana:
+          Calories: 105
+          Fat: 0.4 g
+          Carbs: 27g
+    -   Grape:
+          Calories: 62
+          Fat: 0.4 g
+          Carbs: 27g
+===================================
+# List of Dictionary
+-  Color: Blue
+   Model:
+       Name: Corvette
+       Model: 1995
+   Transitions: Manual
+   Price: 20,000$
+-  Color: Red
+   Model:
+       Name: Corvette
+       Model: 1995
+   Transitions: Manual
+   Price: 20,000$
+-  Color: Black
+   Model:
+       Name: Corvette
+       Model: 1998
+   Transitions: Manual
+   Price: 23,000$
+=====================================
+  ######### NOTE ##########
+
+> Dictionary is Unordered
+> List is Ordered
+
+
+-------------------------------------- ' Ansible Playbooks' ------------------------------
+# ansible playbook is aset of plays which represents a set of commands and tasks on a certain tasks
+-
+  name: Execute two commands on web_node1				 	# play name
+  hosts: web_node1											# Targeted host (group of hosts) from inventory file
+  tasks:													# List of tasks
+    -
+      name: Execute a date command                          # first task name
+      command: date                                         # run a command
+    -
+      name: Execute a command to display hosts file			# second task name
+      command: cat /etc/hosts	                            # run a command
+    -
+      name: run a script			                    	# task name
+      script: test_scrip.sh	                            	# run a SCRIPT
+    -
+      name: install package		                            # task name
+      yum: 		                                            # install package
+      	  name: httpd	                                    # package name
+      	  state: present
+    -
+      name: start service
+      service:
+         name: httpd
+         state: started
+
+# Modules are a tasks that can be excuted we can list all available modules
+ansible-doc -l
+
+# to run a playbook
+ansible-playbook playbook.yml
+
+-------------------------------------'run a playbook'--------------------------------
+# there are two ways to run a playbook
+ansible <host> -a <command>			#  to execute a command
+ansible target -a "/sbin/reboot/"  -i <inventory file>
+ansible all -a "/sbin/reboot/"      # all hosts
+
+ansible target1 -a "/bin/cat /etc/passwd" -i inventory.txt
+
+
+
+
+ansible <host> -m <module>    # to use a module like ping
+ansible target1 -m ping -i <inventory file>
+
+
+
+
+# the second way is to use ansible-playbook
+
+ansible-playbook <playbook>
+
+# to run aping test  
+==================
+-
+  name: test ping
+  hosts: all
+  tasks:
+    - name: ping-test
+      ping:
+====================
+
+ansible-package ping-test.yml -i inventory.txt
+
+-----------------------------------------------------
