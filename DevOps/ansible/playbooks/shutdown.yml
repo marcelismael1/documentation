@@ -1,0 +1,6 @@
+-
+  name: shutdown all target machines
+  hosts: all
+  tasks:
+    -  name: poweroff
+       command: /sbin/shutdown now
