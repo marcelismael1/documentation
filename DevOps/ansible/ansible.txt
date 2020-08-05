@@ -195,7 +195,7 @@ ansible target1 -m ping -i <inventory file>
 
 ansible-playbook <playbook>
 
-# to run aping test  
+# to run aping test
 ==================
 -
   name: test ping
@@ -207,4 +207,94 @@ ansible-playbook <playbook>
 
 ansible-package ping-test.yml -i inventory.txt
 
------------------------------------------------------
+----------------------------------------'Modules' -------------------------
+# Ansible have diffrent types of Modules and it can be classified as below:
+# >> System: it is system level operations as below:
+user, group, hostname, iptable, mak, mount, ping, systemd, service ...
+# >> Commands: it is used to run command and scripts on the remote targets:
+command, expect, raw, script, shell ....
+# >> files: make changes on file:
+acl, archive, copy, file, lineinfile, replace ....
+# >> databases: to handle databases
+mongodb, mssqlm mysql, postgresql, proxysql
+# >> cloud: handles cloud applications\
+amazon, atomic, azure, docker, google, openstack, .....
+# >> windows: perform operations on windows machines:
+win_copy, win_file, win_command, win_ping ....
+
+***************** 'Command' *****************
+# Command  is free_form module
+free_form  #  this means that you dont have to assign values as paramaters just add you input
+
+# command module examples
+==================
+-
+  name: play1
+  hosts: all
+  tasks:
+    - name: excute 'date' Command
+      command: date
+
+    - name: display file content
+      command: cat /etc/resolv.conf
+
+    - name: display file content
+      command: cat resolv.conf chdir=/etc   # command parameter change directory
+
+    - name: create folder
+      command: mkdir /folder creats=/folder
+====================
+
+# some modules are not free_form like win_copy
+    - name: copy file
+      command: src=/source_file dest=/destination   # I have to add parameters
+
+    - name: copy file
+      command:
+          src: /source_file
+          dest: /destination
+
+
+***************** 'script' *****************
+==================
+-
+  name: play1
+  hosts: all
+  tasks:
+    - name:run a script
+      script: /some/local/script.sh -arg1 -arg2
+==================
+
+***************** 'service' *****************
+# this is used to insure that the state of a service is as requested
+# state = (started,stopped,restart)
+==================
+-
+  name: start services in order
+  hosts: target1
+  tasks:
+    - name:start database
+      service: name=mysql state=started
+
+    - name:start httpd
+      service:
+        name: httpd
+        state: started
+==================
+
+============== 'Idempotency' ========
+# an operation is idempontent if the result of the performing it once is exactly the same as the result of performing it repeatedly without any intervning applications
+# this means that an if the playbook was run multiple time it will lead to the same result
+# EXAMPLE:
+***************** 'lineinfile' *****************
+# this module adds a line to a file if this line is added it will do nothing this means lineinfile is idempontent
+==================
+-
+  name:
+  hosts: target1
+  tasks:
+    - lineinfile:
+        path: /etc/resolv.conf
+        line: 'nameserver 10.1.250.1
+==================
+# running this playbook several times will add the line one time
