@@ -353,10 +353,10 @@ inter_ip_range: 192.0.2.0
  ------------------
 | Jinja2 Templating|
  ------------------
- # is the way to declare for variables between {{}}
- source: {{inter_ip_range}}                     # incorrect  (should be between '')
-  source: '{{inter_ip_range}}'                  # correct
-   source: something{{inter_ip_range}}somthing  # correct
+# is the way to declare for variables between {{}}
+source: {{inter_ip_range}}                      # incorrect  (should be between '')
+source: '{{inter_ip_range}}'                    # correct
+source: something{{inter_ip_range}}somthing     # correct
 
 -----------------------------------------------------'Conditions' -------------------------------------------------------
 # this a way to set a condition to run a cetrain task and this by adding when to the tasks
@@ -406,3 +406,86 @@ inter_ip_range: 192.0.2.0
     - shell: echo "nameserver 10.0.250.10" >> /etc/resolv.conf      # this is the 2nd task and it will be excuted in case ..
       when: command_output.stdout.find('10.0.250.10') == -1         # Get register value .stdout.find('10.0.250.10')
 ---------------------------------------------------------- 'Loops' --------------------------------------------------
+  name: Install required packages
+  hosts: localhost
+  vars:
+    packages:
+        - httpd
+        - binutils
+        - glibc
+        - ksh
+        - libaio
+        - libXext
+        - gcc
+        - make
+        - sysstat
+        - unixODBC
+        - mongodb
+        - nodejs
+        - grunt
+
+  tasks:
+    -
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ packages }}"
+
+---------------------------------------------------------- 'Roles' --------------------------------------------------
+# we can devide ansible plays to sepeate files and have one file listin them all_servers
+
+=========
+# the master files
+- include playbood_httpd.yml
+- include playbood_mysql.yml
+- include playbood_nginx.yml
+========
+# this way ansible will construct big yml file from the inculdes
+
+# the same way we can include tasks and variables
+
+===========
+-
+    name: set Firewall Config
+    hosts: target1
+    var_files:
+        - variables.yml
+    task:
+        - include: tasks.yml
+===========
+#variables.yml
+httpd_port: 8080
+snmp_port: 161-162
+
+# tasks.yml
+-
+-
+-
+
+# another way set up you project is by using Role
+1- create this directory tree
+
+- Ansible Project
+    - inventory.txt
+    - setup_application.yml
+    - roles                     # roles directory
+        - webservers            # role name
+            - files
+            - templates
+            - tasks
+                - tasks.yml
+            - handlers
+            - vars
+                - variables.yml
+            - default
+            - meta
+# this way we create a variable file and add it to var folder and tasks file and add it to tasks forler
+# now we can simply addd the following to  setup_application.yml
+-
+    name: set firewall Config
+    hosts: target1
+    roles:
+        - webservers
+----------------------------------------------------------------------------------------------------------
+==========================================================================================================
+----------------------------------------------------------------------------------------------------------
