@@ -298,3 +298,111 @@ free_form  #  this means that you dont have to assign values as paramaters just 
         line: 'nameserver 10.1.250.1
 ==================
 # running this playbook several times will add the line one time
+
+-----------------------------------------------------'Variables' -------------------------------------------------------
+# variable can be defined in Ansible in many ways, and we can call them by '{{VAriable}}'
+ 1-  in the Playbooks
+ ==============
+ -
+  name: Update nameserver entry into resolv.conf file on localhost
+  hosts: localhost
+  vars:
+    car_model: "BMW M3"
+    country_name: USA
+    title: "Systems Engineer"
+  tasks:
+    -
+      name: Print my car model
+      command: echo "My car's model is {{ car_model }}"
+
+    -
+      name: Print my country
+      command: echo "I live in the {‌{ country_name }}"
+
+    -
+      name: Print my title
+      command: echo "I work as a {‌{ title }}"
+ ==============
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2 - in the inventory file
+
+localhost ansible_connection=localhost nameserver_ip=10.1.250.10
+
+==========
+-
+  name: Update nameserver entry into resolv.conf file on localhost
+  hosts: localhost
+  tasks:
+    -
+      name: Update nameserver entry into resolv.conf file
+      lineinfile:
+        path: /etc/resolv.conf
+        line: 'nameserver {{  nameserver_ip  }}'
+==========
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+3- in a seperate file with the same name as the target1
+# Sample var file - target1.yml
+http_port: 8080
+snmp_port: 161-162
+inter_ip_range: 192.0.2.0
+
+# and this data can be used in the Playbook
+
+
+ ------------------
+| Jinja2 Templating|
+ ------------------
+ # is the way to declare for variables between {{}}
+ source: {{inter_ip_range}}                     # incorrect  (should be between '')
+  source: '{{inter_ip_range}}'                  # correct
+   source: something{{inter_ip_range}}somthing  # correct
+
+-----------------------------------------------------'Conditions' -------------------------------------------------------
+# this a way to set a condition to run a cetrain task and this by adding when to the tasks
+
+============
+-
+  name: Execute a script on all web server nodes
+  hosts: all_servers
+  tasks:
+    -
+      service: name=mysql state=started
+      when: ansible_host=='server4.company.com' or ansible_host=='server1.company.com'        # use variable names without Jinja2 Templating
+============
+
+# NOTES:
+1- add when to set a Conditions
+2- you can use or & and
+3- use == for comaring
+
+===========
+-
+  name: Am in an Adult or a Child
+  hosts: localhost
+  vars:
+    age: 25
+  tasks:
+    -
+      command: echo "I am a Child"
+      when: age < 18
+
+    -
+      command: echo "I am an Adult"
+      when: age >= 18
+===========
+
+***************** 'Register and Conditions' *****************
+# this is a way to capture the output of a task in a parameter and use this parameter for a Conditions
+# EXAMPLE
+
+-
+  name: Add name server entry if not already entered
+  hosts: localhost
+  tasks:
+    - shell: cat /etc/resolv.conf       # run a task
+      register: command_output          # get the output
+
+    - shell: echo "nameserver 10.0.250.10" >> /etc/resolv.conf      # this is the 2nd task and it will be excuted in case ..
+      when: command_output.stdout.find('10.0.250.10') == -1         # Get register value .stdout.find('10.0.250.10')
+---------------------------------------------------------- 'Loops' --------------------------------------------------
