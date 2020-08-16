@@ -1,0 +1,17 @@
+# Subdomain check
+
+learn
+https://www.hackerone.com/blog/Guide-Subdomain-Takeovers
+https://geekflare.com/find-subdomains/
+
+
+online tools
+https://www.nmmapper.com/sys/tools/subdomainfinder/
+https://dnsdumpster.com/
+https://sitereport.netcraft.com/?url=http://cloudera.com
+https://pentest-tools.com/
+
+tools
+sublist3r
+knock3
+
