@@ -44,6 +44,9 @@ docker exec <NAME or ID> cat /etc/hosts		# run commands on runnnig container
 docker run -d <Image NAME>		# run in detach mode
 docker attach <ID>			# attach to container
 
+
+# get states of certain container
+docker container states <container_name>
 #############################  Docker Run  ##################################
 
 #  TAGS
