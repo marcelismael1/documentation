@@ -1,3 +1,8 @@
+# How to optimize you nmap scan
+https://hub.packtpub.com/optimize-scans/
+
+
+
 nmap -p- <IP>
 nmap --top-ports=1000 -sS <IP>	#scantop ports
 nmap -p- -sS <IP> #all ports with service
@@ -12,6 +17,10 @@ nmap -n -v -Pn -p- -A --reason -oN nmap.txt 192.168.30.129
 # trace packets
 nmap -n -Pn -p80 --packet-trace scanme.nmap.org
 
-#  without port scanning
+#  without port scanning just check if online or not
 nmap -sn -R --packet-trace 74.207.244.221
 
+# give up on a host after a certain amount of time,
+nmap -sV -A -p- --host-timeout 5m
+
+# 
