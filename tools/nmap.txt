@@ -5,3 +5,13 @@ nmap -p80,443,22 -sC -sV <IP> #specific ports with script
 
 
 nmap -n -v -Pn -p- -A --reason -oN nmap.txt 192.168.30.129
+
+# without the reverse DNS resolution (-n) or ping (-Pn), 
+ nmap -T4 -n -Pn -p- 74.207.244.221
+
+# trace packets
+nmap -n -Pn -p80 --packet-trace scanme.nmap.org
+
+#  without port scanning
+nmap -sn -R --packet-trace 74.207.244.221
+
