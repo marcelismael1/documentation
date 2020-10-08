@@ -1,0 +1,2 @@
+ ps aux |grep my_first_process |grep -q -v grep
+
