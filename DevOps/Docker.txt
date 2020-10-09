@@ -36,6 +36,7 @@ docker run --name <NAME> <Image Name>
 docker run ubuntu sleep 100			# runn Ubuntu container and issue a sleep command to ubuntu
 
 docker exec <NAME or ID> cat /etc/hosts		# run commands on runnnig container
+docker exec -it <container name> /bin/bash
 
 # Run attach and detach
 # when we run a container it runs in the foreground (just when you run simple web server in Kali)

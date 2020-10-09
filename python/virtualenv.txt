@@ -7,6 +7,11 @@ pip install virtualenv
 
 virtualenv venv
 
+# on linux and some cases
+
+python3 -m venv venv
+python3 -m venv <virtual environoment name>
+
 #>>>>> IMPORTANT NOTE: we can create the env with no packages with the option 
 --no-site-packages
 
