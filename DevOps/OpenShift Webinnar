@@ -1,0 +1,42 @@
+RedHat Webinar
+13-10-2020
+
+
+RedHad and CyberArk
+OpenShift
+
+Jody Hunt
+# The hardned version on K8s
+
+# CyberArk uses a Vault to store secrets
+
+initcontainer
+summon
+oc get pods
+
+
+# OpenShift demo
+cd to container
+labctl e # exec into container
+
+
+# K8s secrets only use base64 encodeing - not secured
+# K8s uses env variables and it is dangerous we can get env variables easily
+env | grep <Variable Name>
+
+
+# OpenShift provid secretless connection where the application never gets the crids
+# Using broker
+
+
+Summary
+
+The solution, is to have an authenticator. you should authenticat and then get 8 mins token to get secrets from
+the authenticator.
+
+They have 4 scenarios to handle secret sharing with the vault
+
+1- Rest API
+2- Using Summon to get the secrets
+3- using K8s secrets
+4- Secretless (without sharing secrets instead using a broker) 
