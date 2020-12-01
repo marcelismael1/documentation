@@ -239,6 +239,7 @@ db.posts.find({
 
 ```
 db.posts.createIndex({ title: 'text' })
+db.baseline.createIndex({ip:1}, { unique: true })
 ```
 
 ## Text Search
