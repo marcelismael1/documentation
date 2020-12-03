@@ -408,3 +408,18 @@ docker -H=192.168.0.11:2375 run nginx
 docker run --cpus=.5 ubuntu # container cant consume more that 50% of CPU
 docker run --memory=100m ubuntu # container cant consume more that 100 MB of memory
 
+
+####################### Logging #################
+
+# to view application logs ( cool to check mysql events example)
+docker logs <container name>
+
+
+# will show events LIVE, it is very usefull events that you can pull them and analyse theme
+docker events
+
+# to check the deamon log low level stuff in docker engine
+journalctl -u docker
+
+
+
