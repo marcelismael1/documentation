@@ -1,0 +1,2 @@
+docker build -t aimm-android .
+docker run --name api -d -p 4444:4444 --link mongodb:mongodb aimm-android
