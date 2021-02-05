@@ -1,0 +1,35 @@
+AWS Fundamentals
+
+## Most popular AWS services are
+# Computing
+EC2 (Elastic Computing)
+
+# Storage
+S3 ( storage service, Simple Storage Service ) Amazon Simple Storage Service (Amazon S3) stores data as objects within resources that are called buckets. You can store as many objects as you want within a bucket, and you can write, read, and delete objects in your bucket. Objects can be up to 5 TB in size.
+Amazon EBS- Amazon Elastic Block Store provides persistent block storage volumes for use with Amazon EC2 instances in the AWS Cloud. Each Amazon EBS volume is automatically replicated inside an Availability Zone to protect you from component failure, which offers high availability and durability. Amazon EBS volumes offer the consistent and low-latency performance that you need to run your workloads.
+Amazon EFS - Amazon Elastic File System (Amazon EFS) provides simple, scalable, elastic file storage for use with AWS Cloud services and on-premises resources. It is straightforward to use, and it offers a simple interface that allows you to create and configure file systems quickly and easily.
+
+# load Balancing
+ELB ( Elastic Load Balancing)
+
+# Database
+RDS ( Amazon Relational Database Service)
+DynamoDB
+
+# Scaling
+Scaling Group help create a scaling group with options to scale up the EC2 instances when the applications are on heavy load.
+
+CloudWatch: is the service that monitors all actions and follows metrics and based on that take actions (spin up new EC2 Instances)
+Cloud Trail: Logs every action taken on the cloud
+
+# Cost Management
+Amazon Cost Explorer:  visualize, understand, and manage your AWS costs and usage over time + You can create custom reports
+AWS Budgest: set a budget and issue alarms based on certain period of time and Thresholds
+AWS Pricing Calculator
+
+----  AWSOME TOOL ----
+AWS Trusted advisor: Powerfull tool that can can gives advices and recommendation to optimize the instances
+	( it can advise to optimze Cost - Perfomance - Security - Fault Tolerance - Service Limits)
+	
+	
+	
