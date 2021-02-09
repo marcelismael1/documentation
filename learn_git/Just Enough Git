@@ -90,8 +90,24 @@ git diff master...secondary		# compare differnces
 
 
 
+# Un commit
+#To keep the changes from the commit you want to undo
+
+git reset --soft HEAD^
 
 
+#To destroy the changes from the commit you want to undo
+
+git reset --hard HEAD^
+
+#You can also say
+
+git reset --soft HEAD~2
+#to go back 2 commits.
+#Edit: As charsi mentioned, if you are on Windows you will need to put HEAD or commit hash in quotes.
+
+git reset --soft "HEAD^"
+git reset --soft "asdf"
 
 
 

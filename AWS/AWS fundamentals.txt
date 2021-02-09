@@ -13,8 +13,8 @@ Amazon EFS - Amazon Elastic File System (Amazon EFS) provides simple, scalable, 
 ELB ( Elastic Load Balancing)
 
 # Database
-RDS ( Amazon Relational Database Service)
-DynamoDB
+RDS ( Amazon Relational Database Service) -  we should define the hardware we want to use
+DynamoDB - DynamoDB you don’t need to define the underlying hardware
 
 # Scaling
 Scaling Group help create a scaling group with options to scale up the EC2 instances when the applications are on heavy load.
@@ -31,5 +31,58 @@ AWS Pricing Calculator
 AWS Trusted advisor: Powerfull tool that can can gives advices and recommendation to optimize the instances
 	( it can advise to optimze Cost - Perfomance - Security - Fault Tolerance - Service Limits)
 	
-	
-	
+
+
+############################################################################
+
+############ AWS Fundamentals: Addressing Security Risk ####################
+
+############################################################################
+
+-- Security is based on shared responsablity ( secrurity of the could and secrurity in the could)
+-- Compliance: We include services in the scope of our compliance efforts based on the expected use case, feedback and demand. If a service is not currently listed as in scope of the most recent assessment, it does not mean that you cannot use the service.
+
+# IAM , Identity and Access Managemt:
+AWS Identity and Access Management (IAM) enables you to manage access to AWS services and resources securely. Using IAM, you can create and manage AWS users and groups, and use permissions to allow and deny their access to AWS resources. 
+
+> Create new user and select to give it API access or Console access
+> assign policies to set what resources the user can access (there are pre buildin policies)
+> Set password or autogenerate
+> then we have the URL that can be used for login
+> from IAM>Users we can set MFA method
+
+
+# Organisations
+AWS services that helps creating groups and Organisational Units (OU)
+
+# Authentication and Authorization modes that AWS supports
+>>> A user from company login to use AWS servies from AWS account
+>>> follow security best practices for granting least privilege access and enables you to manage fine-grained permissions for your AWS services and applications. IAM roles enable you to grant resources access to data without distributing passwords, or API keys, or hard-coding credentials in your source code.
+>>> Users regestration and authenticating for an application (Sign Up and Sign in)
+
+#############################
+### AWS Security Services ### 
+#############################
+
+# AWS Organisation 
+Create OU and groups and it helps with BILLING
+
+# AWS Identity and Access Management (IAM)
+Manage users and Groups,
+> Manage IAM Users
+> Manage IAM roles and permissions
+> Mangage Federation account ( we can use and software that support SAML 2.0)
+
+We can right IAM policies as JSON ( there are automatic generators and there is a simulation service to test policies)
+
+# AWS SSO
+
+# Amazon Cloud directory
+> Create directory ( for many solution) it is flexible  unlike LDAP
+
+# Amazon Cognito
+Allow you to integrate with other identity providers to gain access ( we can have AWS manage users or we can use our own users and directory ( evern Microsoft active directory)
+
+
+
+ 
