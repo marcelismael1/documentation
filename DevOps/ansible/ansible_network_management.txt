@@ -1,0 +1,5 @@
+
+
+# ad hoc commands
+ansible <group name> -m <model name> ..............
+ansible routers -m raw -a "show ip route" -u john -k
