@@ -1,5 +1,18 @@
 
 
-# ad hoc commands
+#######################
+### Configure a lab ###
+#######################
+https://developer.cisco.com/
+
+
+
+
+#############################
+#### Run ad hoc commands ####
+#############################
+
 ansible <group name> -m <model name> ..............
+
+# get routing table
 ansible routers -m raw -a "show ip route" -u john -k
