@@ -300,7 +300,7 @@ free_form  #  this means that you dont have to assign values as paramaters just 
 # running this playbook several times will add the line one time
 
 -----------------------------------------------------'Variables' -------------------------------------------------------
-# variable can be defined in Ansible in many ways, and we can call them by '{{VAriable}}'
+# variable can be defined in Ansible in many ways, and we can call them by '{{Variable}}'
  1-  in the Playbooks
  ==============
  -
