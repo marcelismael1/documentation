@@ -1,3 +1,6 @@
+# references
+https://www.youtube.com/watch?v=OWKPxAgh9DU
+
 
 
 #######################
@@ -8,29 +11,97 @@ https://developer.cisco.com/
 ## Ansible server centos7 (ama user)
 ## ansible server client centos7 (root ss...)
 
-Centos 7
+# >>Centos 7
 sudo yum upgrade -y
 sudo yum update -y
 sudo yum install epel-release    # add epel repo
 yum install ansible
 
 
+
 # on the client test machine
-PermitRootLogin yes
+PermitRootLogin yes    ## there is an option to only allow root with key "prohibit-password"
 PasswordAuthentication yes
+
+
+# >> ubuntu
+PermitRootLogin yes    ## there is an option to only allow root with key "prohibit-password"
+PasswordAuthentication yes
+
+#>> Router
+# 1 get Cisco v1000 GCP deployment 
+# 2 add ssh public key
+# 3 get deployment IP
+# 4 ssh to it
+# 5 enable username/passwd
+config t
+username admin privilege 15 secret ss501
+
+
+
+#########################
+### Configure Ansible ###
+#########################
+
+#############
+## SERVERS ##
+#############
+
+########
+==========================
+[servers]
+S1 ansible_host=10.156.0.3
+S2 ansible_host=10.156.0.3
+
+[servers:vars]
+ansible_ssh_pass=ss501
+
+[centos]
+S1
+
+[ubuntu]
+S2
+=========================
+########
 
 # test
 
  sudo ansible all -m ping -i inventory.txt
  sudo ansible all -a "/bin/cat /etc/passwd" -i inventory.txt
+ sudo ansible all -a "ip a" -i inventory.txt
+ sudo ansible all -a "route -n" -i inventory.txt
 
 #############################
 #### Run ad hoc commands ####
 #############################
-
 ansible <group name> -m <model name> ..............
 
-# get routing table
-ansible routers -m raw -a "show ip route" -u john -k
 
+
+#############
+## ROUTERS ##
+#############
+
+
+# if we use the below vars we will issue commands as so
+[ios]
+R1 ansible_host=10.156.0.4
+
+# variables for each item of the group
+[ios:vars]
+ansible_connection=network_cli
+ansible_network_os=ios
+ansible_user=admin
+ansible_password=ss501
+###############
+
+sudo ansible R1 -m ping -i inventory.txt
+sudo ansible ios -m ios_command -a "commands='show ip route'"  -i inventory.txt
+
+
+
+
+
+# to test everything
+ sudo ansible all -m ping -i inventory.txt
 
