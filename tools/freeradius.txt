@@ -1,0 +1,29 @@
+
+
+
+
+##################
+### PAM radius ###
+##################
+
+https://freeradius.org/sub_projects/
+
+#the main sources to activate ssh radius login
+https://docs.classic.secureauth.com/display/82docs/PAM+RADIUS+Installation+and+Configuration+Guide#tab-RedHat+%2F+CentOS
+https://www.howtoforge.com/configuring-ssh-to-use-freeradius-and-wikid-for-two-factor-authentication
+
+
+##################################################
+NOTE: Edit /etc/pam.d/sshd to allow Radius authentication:
+vi /etc/pam.d/sshd
+auth     sufficient   /lib/security/pam_radius_auth.so 
+The “sufficient” tag indicates that if the Radius authentication succeeds then no additional authentication will be required. However, if the Radius authentication fails, a username and password from the system will work. Use "Required" to require strong authentication.
+##################################################
+
+
+Important Notes:
+
+1 - Add the server that you want it to act as a client as a NAS in freeradius and give it a secret which will then ba the shared secret with server and client
+2 - When adding a user or NAS restart freeradius
+3 - freeradius -x is debug mode
+4 - radtest is how we test freeradius
