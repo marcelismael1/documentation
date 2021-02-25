@@ -17,6 +17,13 @@ sudo yum update -y
 sudo yum install epel-release    # add epel repo
 yum install ansible
 
+>Cancel Host ssh key check by either 
+1- set  /etc/ansible/anisble.cfg
+ host_key_checking = False
+
+2- OR create ansible.cfg and ad the following
+[defaults]
+host_key_checking = False
 
 
 # on the client test machine
@@ -47,6 +54,12 @@ username admin privilege 15 secret ss501
 ## SERVERS ##
 #############
 
+
+# NOTE 1:   there should be no spaces in the names of systems or fault will occure 
+# NOTE 2:   Ansible will use the username of the user that will issue the command so it is always a good idea to as the paramter to 
+#           the inventory file
+
+ansible_user=root
 ########
 ==========================
 [servers]
@@ -70,6 +83,18 @@ S2
  sudo ansible all -a "/bin/cat /etc/passwd" -i inventory.txt
  sudo ansible all -a "ip a" -i inventory.txt
  sudo ansible all -a "route -n" -i inventory.txt
+
+ping-text.yml
+=======================
+-
+  name: test ping
+  hosts: k8s
+  tasks:
+    - name: ping-test
+      ping:
+=====================
+ansible-playbook ping-text.yml -i inventory.ini
+
 
 #############################
 #### Run ad hoc commands ####
