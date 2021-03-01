@@ -1,0 +1,53 @@
+#FreeIPA is identiry managment software from RH, the installations as below
+
+
+#Minimun Requirments
+# 2vCPUS
+# 2 GB RAM
+
+# follow thh steps in the first link but use the below commads since they worked
+
+https://www.linuxtechi.com/install-configure-freeipa-centos-7-server/
+https://www.freeipa.org/page/Quick_Start_Guide
+
+change hostname to FQDN
+Change /etc/hosts to that name aswell 
+
+
+yum install freeipa-server freeipa-server-dns
+firewall-cmd --add-service=freeipa-ldap --add-service=freeipa-ldaps
+firewall-cmd --add-service=freeipa-ldap --add-service=freeipa-ldaps --permanent
+firewall-cmd --reload
+ipa-server-install
+
+#  allow User’s home directory creation automatically after authentication
+authconfig --enablemkhomedir --update
+
+# to check status
+ipactl status
+
+# create admin user
+kinit admin
+
+# to list options
+klist 
+
+
+
+#########################################################
+#  add Centos freeIPA client
+
+https://www.digitalocean.com/community/tutorials/how-to-configure-a-freeipa-client-on-centos-7
+
+# 1- Add a /etc/hosts record from server side points at the client (10.7.7.10 client1.test.server)
+# 2- Do the same step from client side to point at the server and the client as well
+# 3- 
+yum install freeipa-client
+
+ipa-client-install --mkhomedir
+
+visit the link to check the correct configurations
+
+# use the admin username and password to finish the configurations
+
+
