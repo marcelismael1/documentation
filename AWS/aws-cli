@@ -17,9 +17,10 @@ Default region name [None]: us-west-2
 Default output format [None]: json
  
 ---------------------- Basic commands ---------------------
-
+# list regions
 aws ec2 descibe-regions 
 aws ec2 descibe-regions  --output table
 aws ec2 descibe-regions  --output text
 
- 
+# List instances
+aws ec2 describe-instances --filters "Name=tag:Name,Values=MyInstance"
