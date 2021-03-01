@@ -1,6 +1,6 @@
 # Best prcatices and advices for DevOps and Cloud secrity
 
-|| 1 || ------------------------------------------------------------------------------------
+||1|| ------------------------------------------------------------------------------------
 # Almost standard opensecurity stack for cloud environoments is the below set of tools
 # we can deploy these tools on AWS, GCP, Azure and Datacenter
 Falco - runtime securiy
@@ -9,4 +9,12 @@ opa - Open Policy Agent -  policy and governance
 Onway - 
 Istio - service mesh
 
+
+||2|| ------------------------------------------------------------------------------------
+
+# K8s security, the best logs that we can activate in order have good monitoring over  k8s cluster are 
+> API Server Audit Logs
+> In-Container Malicious Behavior Logs
+> K8s component logs
+> Pod/Container/Application Logs
 
