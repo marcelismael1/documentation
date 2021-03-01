@@ -1,0 +1,25 @@
+aws-cli
+
+# a effective method to access and control ALL aws account, and we can also automate work on aws
+
+# Gerneral command structure
+
+aws <service> <Operation>
+aws <command> <subcommand>
+aws ec2 descibe-instances
+
+----------------------- Configure AWS cli ----------------------------
+
+$ aws configure
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: us-west-2
+Default output format [None]: json
+ 
+---------------------- Basic commands ---------------------
+
+aws ec2 descibe-regions 
+aws ec2 descibe-regions  --output table
+aws ec2 descibe-regions  --output text
+
+ 
