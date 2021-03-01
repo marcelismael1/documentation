@@ -1,0 +1,12 @@
+# Best prcatices and advices for DevOps and Cloud secrity
+
+|| 1 || ------------------------------------------------------------------------------------
+# Almost standard opensecurity stack for cloud environoments is the below set of tools
+# we can deploy these tools on AWS, GCP, Azure and Datacenter
+Falco - runtime securiy
+Sysdig opensource - troubleshooting 
+opa - Open Policy Agent -  policy and governance
+Onway - 
+Istio - service mesh
+
+
