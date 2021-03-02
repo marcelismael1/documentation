@@ -4,8 +4,8 @@ aws-cli
 
 # Gerneral command structure
 
-aws <service> <Operation>
-aws <command> <subcommand>
+aws <service> <Operation> <attributes>
+aws <command> <subcommand> <attributes>
 aws ec2 descibe-instances
 
 ----------------------- Configure AWS cli ----------------------------
@@ -24,3 +24,92 @@ aws ec2 descibe-regions  --output text
 
 # List instances
 aws ec2 describe-instances --filters "Name=tag:Name,Values=MyInstance"
+
+--------------------- IAM ------------------------
+# Create group
+aws iam create-group --group-name Mygroup
+
+# Create user
+aws iam create-user --user-name Myuser
+
+# add user to a group
+aws iam add-user-to-group --user-name Mysuser --group-name Mygroup
+
+# validate 
+aws iam get-group --group-name Mygroup
+
+# create a policy
+# create a json file and add the policy rules to it
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "AdministratorAccess",
+            "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
+        }
+    ],
+    "IsTruncated": false
+}
+
+# THE IS A AUTO POLICY GENERATOR
+
+# add the policy to the group
+# for default policies
+aws iam attach-group-policy --group-name Admins --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+
+# for manually added policies
+aws iam attach-group-policy --group-name Admins --policy-name MyFirstPolicy --policy-document <policy file dir>
+
+# validate
+aws iam list-attached-group-policies --group-name Admins
+
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "AdministratorAccess",
+            "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
+        }
+  
+# Create access key for a user
+
+aws iam create-access-key --user-name User
+
+--------------------- EC2 ------------------------
+# to create an ec2 instance we need the below attributes
+[KeyPair -- image name (ami) -- instanace type -- security group]
+
+
+# Steps for creating EC2 instance are as below
+#> 1 - create key pair
+# this is the private part of the key pair and it is important for any operation on the instance that we will assign it for
+aws ex2 create-key --key-name <Key Name> --query "KeyMaterial" --output text > Mykey.pem
+
+#> 2 create security group
+aws ec2 create-securiy-group --group-name <security group name> --description "Security group description"
+
+#> 3 assign rule sot securiy group
+# ingress rule
+aws ec2 authorize-security-group-ingress --group-name <GroupName> --protocol <protocol> --port <port Num> --cidr <authorized ips>
+aws ec2 authorize-security-group-ingress --group-name HTTPGroup --protocol tcp --port 80 --cidr 15.15.15.15
+
+# Now we have all pieces of the puzzle lets create the instance
+
+aws ec2 run-instances --image-id <ami> --count <NumOfInstances> --instance-type <instanceType> --key-name <keyName> --securiy-group <SecurityGroup>
+aws ec2 run-instances --image-id ami-03ae21354a --count 1 --instance-type t2.micro --key-name KeyName --securiy-group GroupName
+
+
+# Validate
+aws ec2 descibe-instances
+# for more detailed info we can query specific data
+aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId,State.Name,LaunchTime,PublicIpAddress]' --output table
+
+--------------------- S3 ------------------------
+# To create a S3 bucker we user makebucker command as below but tht bucker name should be unique
+aws s3 mb s3://cloud-65467546546421-bucket
+
+# upload to bucket
+aws s3 cp <LocalFilePath> <s3BuacketName>
+aws s3 /home/user/image/im.jpg s3://cloud-65467546546421-bucket
+
+# downloading the file is the way around
+aws s3 s3://cloud-65467546546421-bucket/im.jpg /home/user/image/
+
