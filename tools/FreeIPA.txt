@@ -32,7 +32,8 @@ kinit admin
 # to list options
 klist 
 
-
+# Uninstall
+ipa-server-install uninstall
 
 #########################################################
 #  add Centos freeIPA client

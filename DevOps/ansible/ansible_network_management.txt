@@ -95,6 +95,11 @@ ping-text.yml
 =====================
 ansible-playbook ping-text.yml -i inventory.ini
 
+ ansible MNO1-CAS0  -a "route -n" -i inventory.ini
+ 
+ netstat -anp | grep SCTP
+
+ ansible MNO2-CU1   -a " netstat -anp | grep SCTP" -i inventory.ini
 
 #############################
 #### Run ad hoc commands ####
