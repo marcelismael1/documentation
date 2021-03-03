@@ -1,12 +1,15 @@
 #FreeIPA is identiry managment software from RH, the installations as below
 
+############################
+### SERVER CONFIGURATION ###
+############################
 
 #Minimun Requirments
 # 2vCPUS
 # 2 GB RAM
 
 # follow thh steps in the first link but use the below commads since they worked
-
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/identity_management_guide/basic-install
 https://www.linuxtechi.com/install-configure-freeipa-centos-7-server/
 https://www.freeipa.org/page/Quick_Start_Guide
 
@@ -35,8 +38,9 @@ klist
 # Uninstall
 ipa-server-install uninstall
 
-#########################################################
-#  add Centos freeIPA client
+####################################
+###  add Centos freeIPA client   ###
+####################################
 
 https://www.digitalocean.com/community/tutorials/how-to-configure-a-freeipa-client-on-centos-7
 
@@ -45,10 +49,95 @@ https://www.digitalocean.com/community/tutorials/how-to-configure-a-freeipa-clie
 # 3- 
 yum install freeipa-client
 
+
+# NOTE use -N or --no-ntp
 ipa-client-install --mkhomedir
+ipa-client-install --mkhomedir --no-ntp
+ipa-client-install --mkhomedir --domain="local.server" --server="ipa.local.server" --realm="LOCAL.SERVER" -N
+
+--------------------------------------------------------------------------------
+Provide the domain name of your IPA server (ex: example.com): example.com
+Provide your IPA server name (ex: ipa.example.com): ipa.example.com
+
+Autodiscovery of servers for failover cannot work with this configuration.
+If you proceed with the installation, services will be configured to always access the discovered server for all operations and will not fail over to other servers in case of failure.
+Proceed with fixed values and no DNS discovery? [no]: yes
+
+Continue to configure the system with these values? [no]: yes
+
+User authorized to enroll computers: admin
+-----------------------------------------------------------------------------------
 
 visit the link to check the correct configurations
 
 # use the admin username and password to finish the configurations
 
+# Uninstall
+ ipa-client-install --uninstall
+ # Unattended
+ ipa-client-install --uninstall -U
 
+===============================================================================================================
+
+Files that will be replaced if SSSD is configured (default):
+
+	  /etc/sssd/sssd.conf
+
+Files that will be replaced if they exist and SSSD is not configured (--no-sssd):
+
+	  /etc/ldap.conf
+	  /etc/nss_ldap.conf
+	  /etc/libnss-ldap.conf
+	  /etc/pam_ldap.conf
+	  /etc/nslcd.conf
+
+Files replaced if NTP is enabled:
+
+	  /etc/ntp.conf
+	  /etc/sysconfig/ntpd
+	  /etc/ntp/step-tickers
+
+Files always created (replacing existing content):
+
+	  /etc/krb5.conf
+	  /etc/ipa/ca.crt
+	  /etc/ipa/default.conf
+	  /etc/ipa/nssdb
+	  /etc/openldap/ldap.conf
+
+Files updated, existing content is maintained:
+
+	  /etc/nsswitch.conf
+	  /etc/krb5.keytab
+	  /etc/sysconfig/network
+==========================================================================================================
+
+# NOTE:  unttended installation requires Bulk password and this maybe solved like below
+[ipaserver]$ ipa host-add client.initd.int --password=bulkpassword
+[client.initd.int]$ ipa-client-install .... --password=bulkpassword
+
+====================================================================================================
+# Unattended installation will use something like this
+# ||||IMPORTANT|||| :we should configure a principal from serverside to use Unattanded login
+
+[root@centos1 ~]# ipa-client-install --mkhomedir --domain="local.server" --server="ipa.local.server" --realm="LOCAL.SERVER" --principal admin -w vili$123 -U -N
+
+
+##########################################################################################################################################################################
+
+#########################
+### sudo priviallages ###
+#########################
+We can set sudo Privilages by adding new sudo policy, configure it and add users or groups to it and that is it 
+# NOTE: you might need to restart something to make it work I reconnected the client to make it work
+
+
+################################
+###integrate with Freeradius ###
+################################
+# this way we user radius to authenticate FreeIPA user 
+1- create NAS in Freeradius for the FreeIPA IP and then restart freeradius service
+2- Loggin to FreeIPA and add new radius server
+3- Create new user with no password and set the authentiation to be RADIUS and select radius server and Username (if IPA user is diffrent from Freeradius one)
+
+and this way we can use radius auth to loggin to FreeIPA domain
