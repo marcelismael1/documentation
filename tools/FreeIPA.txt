@@ -121,8 +121,6 @@ Files updated, existing content is maintained:
 # ||||IMPORTANT|||| :we should configure a principal from serverside to use Unattanded login
 
 [root@centos1 ~]# ipa-client-install --mkhomedir --domain="local.server" --server="ipa.local.server" --realm="LOCAL.SERVER" --principal admin -w vili$123 -U -N
-
-
 ##########################################################################################################################################################################
 
 #########################
