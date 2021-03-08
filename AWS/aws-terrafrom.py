@@ -70,7 +70,7 @@ terraform plan
 
 # to excute the terraform file 
 terraform apply
-terraform apply --auto-apply # unattended apply
+terraform apply --auto-approve # unattended apply
 
 
 # NOTE: always plan before apply
@@ -143,6 +143,20 @@ resource "aws_subnet" "example_subnet" {
 <resource_type>.<Terrafrom_Name>.id
 aws_vpc.first_VPC.id                   # reference to first_VPC VPC
 aws_vpc.main.id                        # reference to main default VPC
+
+
+#######################
+### Terraform Files ###
+#######################
+
+ .terraform
+# this is a folder that contains all the provider plugins whhen we issue "terraform init" 
+# Deleteing it will no apply the tf file. but we can alwasys init again
+
+terraform.tfstate
+# as we learned earlier that terraform applys the files to save the state of the infrastructure and to do so it uses this file
+# to save infrastructure state.
+# deleting this file will miss up everything so be carefull
 
 
 
