@@ -1,9 +1,9 @@
 #FreeIPA is identiry managment software from RH, the installations as below
 # GREATE REFERENCE
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/identity_management_guide/index
-############################
-### SERVER CONFIGURATION ###
-############################
+#####################################################################################################################################
+### SERVER CONFIGURATION ############################################################################################################
+#####################################################################################################################################
 
 #Minimun Requirments
 # 2vCPUS
@@ -39,9 +39,14 @@ klist
 # Uninstall
 ipa-server-install uninstall
 
-####################################
-###  add Centos freeIPA client   ###
-####################################
+
+$ ldapsearch -x uid=admin
+
+$ ldapsearch -x -h ipa.example.com  -b dc=example,dc=com uid=admin
+
+#############################################################################################################
+###  add Centos freeIPA client   ############################################################################
+#############################################################################################################
 
 https://www.digitalocean.com/community/tutorials/how-to-configure-a-freeipa-client-on-centos-7
 
@@ -122,21 +127,83 @@ Files updated, existing content is maintained:
 # ||||IMPORTANT|||| :we should configure a principal from serverside to use Unattanded login
 
 [root@centos1 ~]# ipa-client-install --mkhomedir --domain="local.server" --server="ipa.local.server" --realm="LOCAL.SERVER" --principal admin -w vili$123 -U -N
-##########################################################################################################################################################################
 
-#########################
-### sudo priviallages ###
-#########################
+#################################################################################################################
+### sudo priviallages ###########################################################################################
+#################################################################################################################
 We can set sudo Privilages by adding new sudo policy, configure it and add users or groups to it and that is it 
 # NOTE: you might need to restart something to make it work I reconnected the client to make it work
 
 
-################################
-###integrate with Freeradius ###
-################################
+##################################################################################################################
+###integrate with Freeradius #####################################################################################
+##################################################################################################################
 # this way we user radius to authenticate FreeIPA user 
 1- create NAS in Freeradius for the FreeIPA IP and then restart freeradius service
 2- Loggin to FreeIPA and add new radius server
 3- Create new user with no password and set the authentiation to be RADIUS and select radius server and Username (if IPA user is diffrent from Freeradius one)
 
 and this way we can use radius auth to loggin to FreeIPA domain
+
+
+
+
+###################################################################################################################
+### Forti Gate ####################################################################################################
+###################################################################################################################
+To make fortigate authenticate using FreeIPA LDAP 
+https://www.freeipa.org/page/Owncloud_Authentication_against_FreeIPA # nice related reference 
+# FortiGate == FG
+#> 1- Add freeipa certifiacte to FG
+# From FreeIPA generate a certificate or use an already genrated one, download it and uploaded to FortiGate
+# certificate looks like below
+CN=ipa.local.server,O=LOCAL.SERVER
+
+# 2- Add LDAP server
+Fortigate > Users&Devices > LDAP Server > Create new
+# settings as below
+=====================================================
+Name = FreeIPA
+Server IP/Name = ipa.local.server # FreeIPA FQDN or Host IP
+Server Port = 636  					# 636 for LDAPS, 389 for LDAP
+Common Name Identifier  = uid		# IMPORTANT||||
+Distinguished Name = cn=accounts,dc=local,dc=server  # sub tree, dont select the root tree " dc=local,dc=server" or it will cause issues
+Bind Type = Regular
+Username = uid=admin,cn=users,cn=accounts,dc=local,dc=server		# Distinguished Name of a user 
+#NOTE: We use the Distinguished Name becuase the LDAP first makes an initial Bind with only username and password so we need to poit tehe auth to the username directly using Distinguished Name
+
+Password  = ••••••••
+Secure Connection = True			# to use LDAPS
+Protocol  = LDAPS	
+Certificate = G_CA_Cert_2			# Certificate name in FG 			
+======================================================
+# To test the connection we can test user Credentials
+
+# 3- We need to add DNS records for FreeIPA server in Fortigate DNS tap (add A record and ptr records)
+
+# 4- From FreeIPA create groups and add users to it and then from FG go to User Groups and create a new user group 
+# 		that uses the newly add LDAP server and points to the remote group as below 
+Remote Server  			Group Name
+FreeIPA					cn=testgroup2,cn=groups,cn=accounts,dc=local,dc=server
+
+# 5- Create a portal and decide what networks the users will have access to
+VPN > SSL-VPN Portals
+
+# 6- Edit SSL-VPN settings and add a bind between the Usergroup and the portal
+VPN > SSL-VPN Settings
+
+# 7- Add a Firewall policy to allow the access to the new usergroup 
+Policy&Objects > IPv4 Policy
+Add a policy that allow user group access to the SSL-VPN interface.
+
+
+# ||||| IMPORTANT ||||: In this setup, first the FG sends bind request to the LDAP server with the main Username and password, and then sends a search query for the users
+#						The LDAP server authentiate and binds, FG send then name of the user and the LDAP then send back "Distinguished Name" id=THEUSER,cn=users,cn=accounts,dc=local,dc=server
+#						The bind the breaks and a new bind request is sent to the LDAP server with the new user Distinguished Name and password
+FG > ipa.server  - bind -  uid=admin,cn=users,cn=accounts,dc=local,dc=server/PASSWORD
+ipa.server > FG - Success
+FG > ipa.server	- ldapsearch for - uid=testuser1
+ipa.server > FG - Result - uid=testuser1,cn=users,cn=accounts,dc=local,dc=server
+FG > ipa.server - unbind
+FG > ipa.server - bind - uid=testuser1,cn=users,cn=accounts,dc=local,dc=server/PASSWORD
+ipa.server > FG - Success
