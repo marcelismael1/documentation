@@ -72,6 +72,11 @@ terraform plan
 terraform apply
 terraform apply --auto-approve # unattended apply
 
+# we can taget a specific resource to deployed
+terraform apply -target  provider.resource_type
+terraform apply -target  aws_instances.my_first_instance
+
+
 
 # NOTE: always plan before apply
 
@@ -109,11 +114,40 @@ resource "aws_instances" "my_first_instance" {
 # to delete the instance we use, this will destroy a full infrastructure
 terraform destroy
 
+# to destroy a specific resource we use target
+terraform destroy -target  aws_instances.my_first_instance
 
 # delete instances
 # We can delete the instance by deleteing the instance form the tf and it can be delleted easiely
 
 
+#######################
+### Useful Commands ###
+#######################
+# to validate the configurations before running
+terraform validate
+
+# too list state of infrastructure
+terraform state list
+
+# a specific item details
+terraform state show aws_instance.webserver
+
+# we can print any of the information we want during terraform apply by configuring a output
+output "print_webserver_public_ip"{
+    value = aws_eip.web-eip.public_ip       # point to a certain parameter in this case the public_ip of the eip we created
+    }
+
+# refresh state and print output
+terraform refresh 
+
+
+# print only the output
+terraform output
+
+# to show current status
+
+terraform show
 
 ##############################
 ### Create VPC and Subnets ###
@@ -157,6 +191,33 @@ terraform.tfstate
 # as we learned earlier that terraform applys the files to save the state of the infrastructure and to do so it uses this file
 # to save infrastructure state.
 # deleting this file will miss up everything so be carefull
+
+
+############################
+### Simple Basic Project ###
+############################
+# in this example a web server will be created and deployed, and in order to do so the below steps will be executed:
+# # 1. Create vpc
+# # 2. Create Internet Gateway
+# # 3. Create Custom Route Table
+# # 4. Create a Subnet 
+# # 5. Associate subnet with Route Table
+# # 6. Create Security Group to allow port 22,80,443
+# # 7. Create a network interface with an ip in the subnet that was created in step 4
+# # 8. Assign an elastic IP to the network interface created in step 7
+# # 9. Create Ubuntu server and install/enable apache2
+
+
+# to connect via ssh 
+
+chmod 400 ama-key.pem
+ssh -i "ama-key.pem" ubuntu@<public-ip>
+
+
+
+
+
+
 
 
 
