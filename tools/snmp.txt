@@ -1,0 +1,47 @@
+Observium:
+
+
+# Note by default we cant add users from web interface in order to activate it
+chmod +s /usr/bin/fping
+
+
+# main dir
+/opt/observium
+
+# new user 
+adduser.php <username> <password> <level 1-10> [email]
+./adduser.php user1 password 10
+add_device.php
+
+
+
+
+# Centos 7 add new snmp 
+yum install net-snmp net-snmp-utils
+
+mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.bak
+
+nano /etc/snmp/snmpd.conf
+
+rocommunity <secret> <serverip>
+rocommunity supersecret 0.0.0.0/0
+rocommunity supersecret 10.10.10.10
+
+# start service
+systemctl start snmpd
+systemctl enable snmpd
+
+# firewall rules
+firewall-cmd --add-service=snmp 
+firewall-cmd --add-service=snmp --permanent
+firewall-cmd --reload
+
+
+################################
+###   Test Connectivity ########
+###############################
+
+https://www.comparitech.com/net-admin/snmpwalk-examples-windows-linux/#:~:text=The%20snmpwalk%20command%20is%20used,gathered%20from%20every%20connected%20node.
+
+snmpwalk <version> -c <comunity_name> <hostname>
+snmpwalk -v2c -c abcd1234 10.78.78.6
