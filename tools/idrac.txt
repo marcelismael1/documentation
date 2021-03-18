@@ -1,0 +1,39 @@
+idrac cheatsheet
+
+
+http://dev.gnali.org/?p=435
+# check system config
+racadm get
+racadm get BIOS.SysSecurity
+
+# set some config
+# set AC Power Restore
+# Options are OFF, ON, and LAST
+racadm set BIOS.SysSecurity.AcPwrRcvry Last
+racadm set BIOS.SysSecurity.AcPwrRcvryDelay Immediate
+
+# Commit changes without reboot and they will take place after reboot
+racadm jobqueue create BIOS.Setup.1-1
+
+# reboot
+racadm serveraction powercycle
+
+
+# Details
+https://shop.tgccomputers.co.uk/img/pdf/mmo_52903950_1545381876_7061_5428.pdf
+
+racadm jobqueue view
+
+racadm jobqueue view -i <JobID>
+
+racadm jobqueue delete --all
+
+racadm jobqueue delete -i <JobID>
+
+racadm jobqueue delete –i JID_CLEARALL
+
+– --realtime is applicable for storage configuration commands run on systems with
+PERC 9 cards with firmware version 9.1 and later
+
+
+racadm jobqueue view -i JID_160193480141

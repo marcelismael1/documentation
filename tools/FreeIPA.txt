@@ -47,7 +47,7 @@ $ ldapsearch -x -h ipa.example.com  -b dc=example,dc=com uid=admin
 #############################################################################################################
 ###  add Centos freeIPA client   ############################################################################
 #############################################################################################################
-
+https://www.howtoforge.com/how-to-install-freeipa-client-on-centos-7/
 https://www.digitalocean.com/community/tutorials/how-to-configure-a-freeipa-client-on-centos-7
 
 # 1- Add a /etc/hosts record from server side points at the client (10.7.7.10 client1.test.server)
