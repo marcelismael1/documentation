@@ -318,3 +318,8 @@ kubectl -n my-ns delete pod --all
 kubectl -n my-ns delete svc --all 
 kubectl -n my-ns delete deployment --all 
 kubectl -n my-ns delete pod,svc,deployment --all 
+
+
+
+kubectl get pods -A
+kubectl get nodes -o wide

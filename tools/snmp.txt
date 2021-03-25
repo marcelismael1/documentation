@@ -45,3 +45,4 @@ https://www.comparitech.com/net-admin/snmpwalk-examples-windows-linux/#:~:text=T
 
 snmpwalk <version> -c <comunity_name> <hostname>
 snmpwalk -v2c -c abcd1234 10.78.78.6
+snmpwalk -v2c -c abcd1234 10.59.59.251

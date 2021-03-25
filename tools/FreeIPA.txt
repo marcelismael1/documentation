@@ -53,13 +53,19 @@ https://www.digitalocean.com/community/tutorials/how-to-configure-a-freeipa-clie
 # 1- Add a /etc/hosts record from server side points at the client (10.7.7.10 client1.test.server)
 # 2- Do the same step from client side to point at the server and the client as well
 # 3- 
+
+
+ hostnamectl set-hostname your-new-hostname
+
+
 yum install freeipa-client
 
 
 # NOTE use -N or --no-ntp
 ipa-client-install --mkhomedir
 ipa-client-install --mkhomedir --no-ntp
-ipa-client-install --mkhomedir --domain="local.server" --server="ipa.local.server" --realm="LOCAL.SERVER" -N
+ipa-client-install --mkhomedir --no-ntp --force-join
+ipa-client-install --mkhomedir --domain="local.server" --server="ipa.local.server" --realm="LOCAL.SERVER" -N --force-join
 
 --------------------------------------------------------------------------------
 Provide the domain name of your IPA server (ex: example.com): example.com
@@ -82,6 +88,16 @@ visit the link to check the correct configurations
  ipa-client-install --uninstall
  # Unattended
  ipa-client-install --uninstall -U
+
+
+
+######################
+#### Client Debug ####
+######################
+
+# debuging logs can be found in
+/var/log/secure
+/var/log/audit/audit.log
 
 ===============================================================================================================
 
