@@ -223,3 +223,80 @@ ipa.server > FG - Result - uid=testuser1,cn=users,cn=accounts,dc=local,dc=server
 FG > ipa.server - unbind
 FG > ipa.server - bind - uid=testuser1,cn=users,cn=accounts,dc=local,dc=server/PASSWORD
 ipa.server > FG - Success
+
+
+
+
+
+
+###################################################################################################################
+### Radius frontend for LDAP ######################################################################################
+###################################################################################################################
+#This is to add radius frontend for LDAP
+https://www.freeipa.org/page/Using_FreeIPA_and_FreeRadius_as_a_RADIUS_based_software_token_OTP_system_with_CentOS/RedHat_7
+
+# Install dependencies
+yum install freeradius freeradius-utils freeradius-ldap freeradius-krb5
+
+
+#|||1|||  add a NAS / Client
+nano /etc/raddb/clients.conf
+client localnet {
+        ipaddr = 10.0.0.0/24      	# Client/NAS source IP/IPs
+        proto = *
+        secret = somesecret			# NAS password
+        nas_type = other
+        limit {
+                max_connections = 16
+                lifetime = 0
+                idle_timeout = 30
+        }
+}
+
+
+#|||2||| Configure radius to use LDAP for AUTH
+#  In sites-enabled/default and sites-enabled/inner-tunnel replace these line
+nano /etc/raddb/sites-enabled/default
+nano /etc/raddb/sites-enabled/inner-tunnel
+---------------------------------------------------------------
+        #
+        #  The ldap module reads passwords from the LDAP database.
+        -ldap
+---------------------------------------------------------------
+# with these
+---------------------------------------------------------------
+        #
+        #  The ldap module reads passwords from the LDAP database.
+        ldap
+        if ((ok || updated) && User-Password) {
+            update {
+                control:Auth-Type := ldap
+            }
+        }
+---------------------------------------------------------------
+and uncomment the following lines
+
+#       Auth-Type LDAP {
+#               ldap
+#       }
+---------------------------------------------------------------
+
+
+#|||3||| Add LDAP to the enabled mods:
+ln -s /etc/raddb/mods-available/ldap /etc/raddb/mods-enabled/
+
+#|||4||| Edit LDAP Config
+nano mods-enable/ldap
+ server = "localhost"                      #    if ldap and radius on the same machine
+ server = "ipa.test.org"                   #    LDAP server
+ base_dn = "cn=accounts,dc=test,dc=org"    #    Base DN, Using only dc=local,dc=server with cause an error
+
+# |||5||| Allow freeradius in the firewall 
+firewall-cmd --permanent --zone=public --add-port=1812/udp --add-port=1813/udp
+systemctl restart firewalld.service
+
+# |||6||| Start freeradius service
+systemctl start radiusd
+systemctl enable radiusd
+
+radiusd –X  #  for debug mode
