@@ -486,6 +486,12 @@ snmp_port: 161-162
     hosts: target1
     roles:
         - webservers
+        
+        
+# create the directory tree
+mkdir -p roles/{<role_name>/{files,templates,tasks,hendlers,vars,default,meta}}
+mkdir -p roles/ipaclient/{files,templates,tasks,hendlers,vars,default,meta}
+
 ----------------------------------------------------------------------------------------------------------
 ==========================================================================================================
 ----------------------------------------------------------------------------------------------------------

@@ -44,6 +44,14 @@ $ ldapsearch -x uid=admin
 
 $ ldapsearch -x -h ipa.example.com  -b dc=example,dc=com uid=admin
 
+# dumps everything
+$ ldapsearch -P 3 -x -W -D "uid=mtest,cn=users,cn=accounts,dc=local,dc=server"
+
+# User info
+$ ldapsearch -P 3 -x -W -D "uid=mtest,cn=users,cn=accounts,dc=local,dc=server" -b "uid=mtest,cn=users,cn=accounts,dc=local,dc=server" \* +
+
+
+
 #############################################################################################################
 ###  add Centos freeIPA client   ############################################################################
 #############################################################################################################
@@ -235,6 +243,13 @@ ipa.server > FG - Success
 #This is to add radius frontend for LDAP
 https://www.freeipa.org/page/Using_FreeIPA_and_FreeRadius_as_a_RADIUS_based_software_token_OTP_system_with_CentOS/RedHat_7
 
+
+# For grouping
+https://blog.sensecodons.com/2020/12/using-ldap-groups-to-limit-to-radius.html
+https://stackoverflow.com/questions/48215798/group-level-authentication-with-freeradius-ldap-freeipa
+
+
+
 # Install dependencies
 yum install freeradius freeradius-utils freeradius-ldap freeradius-krb5
 
@@ -291,6 +306,11 @@ nano mods-enable/ldap
  server = "ipa.test.org"                   #    LDAP server
  base_dn = "cn=accounts,dc=test,dc=org"    #    Base DN, Using only dc=local,dc=server with cause an error
 
+# add the below parts  if we want to enable grouping, without them radius will only authenticate (No grouping info will be retrieved)
+identity = 'uid=admin,cn=users,cn=accounts,dc=local,dc=server'
+password = adminaccoutpassword
+
+
 # |||5||| Allow freeradius in the firewall 
 firewall-cmd --permanent --zone=public --add-port=1812/udp --add-port=1813/udp
 systemctl restart firewalld.service
@@ -300,3 +320,33 @@ systemctl start radiusd
 systemctl enable radiusd
 
 radiusd –X  #  for debug mode
+
+
+
+# ||| 7 ||| enable authorization based on grouping
+# add the below conditions to post authentiation rules (the below conditions will be checked after user is authenticated)
+# auth will be rejected if those conditions are not met (user is member of LDAP-Group)
+# NOTE: this cant be possible without setting the identity/password  in (nano mods-enable/ldap) 
+
+sudo nano  +876 /etc/raddb/sites-enabled/default
+
+# in post-auth { block add the below
+# add elif for extra groups that we want to give permition to
+
+---------------------------------------------------------------------------------------------
+
+        ### ADDED CONDITION ###
+        # Add below Authorized LDAP groups
+        if (LDAP-Group == "network-admin") {
+            noop
+        }
+        elsif (LDAP-Group == "cn=network-admin,cn=groups,cn=accounts,dc=local,dc=server") {
+            noop
+        }
+        else {
+            reject
+        }
+
+----------------------------------------------------------------------------------------
+
+
