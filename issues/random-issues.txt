@@ -1,0 +1,21 @@
+
+
+
+
+
+
+
+---------------------------------------
+#################
+### Slow sshd ###
+#################
+# 1
+#install VMWARE tools
+https://kb.vmware.com/s/article/1018414
+
+#2
+nano /etc/ssh/sshd_config
+
+UseDNS no
+
+--------------------------------------
