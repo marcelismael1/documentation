@@ -1,0 +1,110 @@
+Observium:
+# We are using turn key observium
+
+
+# Note by default we cant add users from web interface in order to activate it
+chmod +s /usr/bin/fping
+
+
+# main dir
+/opt/observium
+
+# new user 
+adduser.php <username> <password> <level 1-10> [email]
+./adduser.php user1 password 10
+add_device.php
+
+
+
+
+# Centos 7 add new snmp 
+yum install net-snmp net-snmp-utils
+
+mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.bak
+
+nano /etc/snmp/snmpd.conf
+
+rocommunity <secret> <serverip>
+rocommunity supersecret 0.0.0.0/0
+rocommunity supersecret 10.10.10.10
+
+# start service
+systemctl start snmpd
+systemctl enable snmpd
+
+# firewall rules
+firewall-cmd --add-service=snmp 
+firewall-cmd --add-service=snmp --permanent
+firewall-cmd --reload
+
+
+################################
+###   Test Connectivity ########
+###############################
+
+https://www.comparitech.com/net-admin/snmpwalk-examples-windows-linux/#:~:text=The%20snmpwalk%20command%20is%20used,gathered%20from%20every%20connected%20node.
+
+snmpwalk <version> -c <comunity_name> <hostname>
+snmpwalk -v2c -c abcd1234 10.78.78.6
+snmpwalk -v2c -c abcd1234 10.59.59.251
+
+
+
+################################
+###   Configure AlertCheks ########
+###############################
+https://docs.observium.org/alert_checker/
+https://docs.observium.org/alerting_transports/
+
+
+
+
+######### EMAILS #######
+https://ithero.eu/documentation/observium/
+https://docs.observium.org/config_options/#installation-directories1
+
+# Steps to enable email notificaitons on Observium
+
+1- We need professional version
+2- we need internet access
+3- we need working SMTP server credentials (you can test it with https://overbits.herokuapp.com/smtpclient/)
+4- Add below to config.php
+
+nano /opt/observium/config.php
+-------------------------------------------------------------------------
+// EMAIL SETTINGS
+$config['email']['enable']          = TRUE;
+$config['email']['from']            = "youremail@outlook.com";
+$config['email']['default']         = "targetemail@gmail.com";
+$config['email']['default_only']    = FALSE;
+$config['email']['smtp_host'] 		= 'smtp.office365.com';
+$config['email']['smtp_port'] 		= 587;
+$config['email']['smtp_timeout'] 	= 10;
+$config['email']['smtp_secure'] 	= 'tls';
+$config['email']['smtp_auth'] 		= TRUE;
+$config['email']['smtp_username'] 	= 'youremail@outlook.com';
+$config['email']['smtp_password'] 	= 'password';
+$config['email']['backend'] 		= "smtp";
+
+// Another option for backend
+//$config['email']['backend'] 		= "sendmail";
+$config['email']['sendmail_path'] 	= "/usr/sbin/sendmail -t -i";
+-------------------------------------------------------------------------------
+
+# to test the alarms
+
+/opt/observium/test_alert.php
+/opt/observium/test_alert.php -c 1 # send to contact #1
+/opt/observium/test_alert.php -a 10  # alarm id
+
+
+## NOTE: If you didnt assosciate an alert checker to conact it will send to the default. 
+# we can use add contact menu>contacts
+$config['email']['default']         = "targetemail@gmail.com";
+$config['email']['default_only']    = FALSE;
+
+## to add a alert checker
+# example
+test = 								ifUcastPkts_rate gt 100
+Device Match / Entity Match = 		device.device_id in 17 AND port.ifName equals Vlan59
+---------------------------------------------------------------------------------

@@ -1,0 +1,15 @@
+
+Login to 
+https://www.observium.org/subs/index.php?logout
+
+Username: VilicomUK
+
+Password: Welcome2020#
+
+# Get username and password
+
+
+# Follow the below steps to upgrade from CE to Sub
+https://docs.observium.org/ce-migration/
+
+------------------------------------------------------------

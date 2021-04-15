@@ -150,7 +150,7 @@ Files updated, existing content is maintained:
 # Unattended installation will use something like this
 # ||||IMPORTANT|||| :we should configure a principal from serverside to use Unattanded login
 
-[root@centos1 ~]# ipa-client-install --mkhomedir --domain="local.server" --server="ipa.local.server" --realm="LOCAL.SERVER" --principal admin -w vili$123 -U -N
+[root@centos1 ~]# ipa-client-install --mkhomedir --domain="local.server" --server="ipa.local.server" --realm="LOCAL.SERVER" --principal admin -w <password> -U -N
 
 #################################################################################################################
 ### sudo priviallages ###########################################################################################
@@ -348,5 +348,40 @@ sudo nano  +876 /etc/raddb/sites-enabled/default
         }
 
 ----------------------------------------------------------------------------------------
+
+
+###############################################################################################################
+### FreeIPA troubleshoot ######################################################################################
+###############################################################################################################
+
+# to activate ipa commands and issue krb token
+kinit admin 
+
+
+#####  Locked user problem
+# the user may be locked form the client os, 
+
+/etc/pam.d/system-auth
+auth        required      pam_faillock.so preauth silent audit deny=3 even_deny_root fail_interval=900 unlock_time=604800
+auth        required      pam_faillock.so authfail audit deny=3 even_deny_root fail_interval=900 unlock_time=604800
+
+
+# This means that if a 3 failed authentications happened the user will be locked for 604800 seconds (week)
+#  better rules
+auth        required      pam_faillock.so preauth silent audit deny=5 even_deny_root fail_interval=900 unlock_time=900
+------------------------------------------------------------------------------------------------------------------
+https://linux.die.net/man/8/pam_faillock#:~:text=Description,than%20deny%20consecutive%20failed%20authentications.
+------------------------------------------------------------------------------------------------------------------
+
+# pam_faillock.so: This module maintains a list of failed authentication attempts per user during a specified interval and locks the account in case there were more than deny consecutive failed authentications.
+
+# to unlock a user
+cd /var/run/faillock
+rm <username>
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 
 
