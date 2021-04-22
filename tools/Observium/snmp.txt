@@ -14,7 +14,7 @@ adduser.php <username> <password> <level 1-10> [email]
 add_device.php
 
 
-
+###### ||| SNMPV2C ||||####
 
 # Centos 7 add new snmp 
 yum install net-snmp net-snmp-utils
@@ -46,3 +46,45 @@ https://www.comparitech.com/net-admin/snmpwalk-examples-windows-linux/#:~:text=T
 snmpwalk <version> -c <comunity_name> <hostname>
 snmpwalk -v2c -c abcd1234 10.78.78.6
 snmpwalk -v2c -c abcd1234 10.59.59.251
+
+-----------------------------------------------------------------------------------------------------
+###### ||| SNMP V3 ||||####
+https://robert.penz.name/812/how-to-configure-snmpv3-securely-in-centosrhelsl/
+
+# 1- install packages
+yum install net-snmp
+
+# install by rpm
+
+sudo rpm -ivh net-snmp-5.7.2-49.el7.x86_64.rpm   			# -i for install
+sudo rpm -Uvh net-snmp-5.7.2-49.el7.x86_64.rpm				# -U for update or install
+sudo rpm -Uvh --nodeps net-snmp-5.7.2-49.el7.x86_64.rpm		# --nodeps no dependencies
+# to delete
+sudo rpm -e file.rpm
+
+# stop snmp service
+service snmpd stop
+
+net-snmp-create-v3-user -ro -A snmpv3authPass -a SHA -X snmpv3encPass -x AES snmpv3user
+
+# -A for authentication password
+# -X for AES password
+
+# Start serive 
+service snmpd start
+
+## TEST###
+snmpwalk -u snmpv3user -A snmpv3authPass -a SHA -X snmpv3encPass -x AES -l authPriv 127.0.0.1 -v3
+
+# to delete the user follow 
+https://robert.penz.name/812/how-to-configure-snmpv3-securely-in-centosrhelsl/
+
+
+# Add device to Obs from command line
+# example to add V3 users
+
+./add_device.php centos1 ap v3 snmpv3user snmpv3authPass snmpv3encPass sha aes
+
+# or add details to file and 
+add_device.php <filename>
+------------------------------------------------------------------------------------------------------------

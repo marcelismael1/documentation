@@ -15,6 +15,13 @@ adduser.php <username> <password> <level 1-10> [email]
 add_device.php
 
 
+# example to add V3 users
+
+./add_device.php centos1 ap v3 snmpv3user snmpv3authPass snmpv3encPass sha aes
+
+# or add details to file and 
+add_device.php <filename>
+
 
 
 # Centos 7 add new snmp 
@@ -56,6 +63,8 @@ snmpwalk -v2c -c abcd1234 10.59.59.251
 https://docs.observium.org/alert_checker/
 https://docs.observium.org/alerting_transports/
 
+# Alert Checkers Examples
+https://github.com/mgmoerman/docs/blob/master/observium-alert-checkers.md
 
 
 
@@ -108,3 +117,13 @@ $config['email']['default_only']    = FALSE;
 test = 								ifUcastPkts_rate gt 100
 Device Match / Entity Match = 		device.device_id in 17 AND port.ifName equals Vlan59
 ---------------------------------------------------------------------------------
+
+
+#### Slack ###
+# This is how we create a webhook on slack and then we need to add slack contact to the Observium and asssosiate an alert for it
+https://api.slack.com/messaging/webhooks
+
+# a webhook looks something like this
+https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+
+
