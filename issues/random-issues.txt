@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 ---------------------------------------
 #################
 ### Slow sshd ###
@@ -19,3 +12,31 @@ nano /etc/ssh/sshd_config
 UseDNS no
 
 --------------------------------------
+################################
+### Ansible permission denied ###
+###############################
+
+# if you get permission denied even you are sure of the configuiration, it might be that there are a change in the target hardware
+# to resolve that delete the fingure print of that maching in 
+/root/.ssh/known_hosts
+------------------------------------------
+
+###########################################
+### CentOS cant connect to local network ##
+###########################################
+
+Check network mask (10.10.10.10/24)
+
+--------------------------------------------------
+
+####################################
+### ESXI root user is not working ##
+####################################
+# it means that the root is locked
+# Check failed attempts
+pam_tally2 --user root
+
+# Clear failed attempts
+pam_tally2 --user root --reset
+
+=====================================================

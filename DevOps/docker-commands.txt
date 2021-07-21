@@ -1,0 +1,18 @@
+# First make sure you have the latest version of docker and docker engine
+https://docs.docker.com/engine/install/centos/
+# for docker compose
+https://docs.docker.com/compose/install/
+
+# install portainer
+docker run -d \
+-p 8000:8000 \
+-p 9000:9000 \
+--name=portainer \
+--restart=always \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v portainer_data:/data \
+portainer/portainer
+
+# install postgres
+docker run -d --name=pg -p 5432:5432 -e POSTGRES_PASSWORD=password  -v /srv/postgresql/data/:/var/lib/postgresql/data postgres
+

@@ -323,3 +323,30 @@ kubectl -n my-ns delete pod,svc,deployment --all
 
 kubectl get pods -A
 kubectl get nodes -o wide
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+--------------------------------  "Connect K8s to local Docker registry" -------------------------------------------------------------------
+
+https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+
+# first we create a secret source to connect to the registry
+#  there is more secured way to do it
+kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>
+
+kubectl get secret
+kubectl get secret regcred --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
+
+# how to use the secret
+apiVersion: v1
+kind: Pod
+metadata:
+  name: private-reg
+spec:
+  containers:
+  - name: private-reg-container
+    image: <your-private-image>
+  imagePullSecrets:
+  - name: regcred
+-----------------------------------------------------------------------------------------------------------------

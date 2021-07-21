@@ -1,11 +1,12 @@
 To install docker 
 
-https://docs.docker.com/engine/install/debian/
-$ curl -fsSL https://get.docker.com -o get-docker.sh
-$ sudo sh get-docker.sh
+# First make sure you have the latest version of docker and docker engine
+https://docs.docker.com/engine/install/centos/
+# for docker compose
+https://docs.docker.com/compose/install/
 
-sudo docker version
-docker run docker/whalesay cowsay boo  ## run simple doker
+
+docker run docker/whalesay cowsay boo  ## run simple docker
 
 #############################  Docker Commands  ##################################
 
@@ -422,4 +423,83 @@ docker events
 journalctl -u docker
 
 
+################## Copy docker container and save state ##############
+'''
+1. stop the container docker stop x; 
+2. commit ur changes docker commit -p x x; 
+3. save the container to image docker save -o x x; 
+4. move the x file to the new host and in the new host load the new image dokcer load -i x(if u started the container with -v option, u'll have to move these files to new host too); '
+5. run this image with docker run (-v is required to mount these files if needed)
+'''
 
+docker commit -p uuu nimg
+docker save -o testimg.tar testimg
+docker load -i testimg.tar ttt
+
+
+########################################################################################################################################################################################################
+######################### Docker Registry ##############################################################################################################################################################
+########################################################################################################################################################################################################
+
+|||IMPORTANT|||: Docker deamon will refuse connecting to unencrypted docker registry, so if we want to install private docker registry we either need to
+secure it with TLS certificate and key or use insecure-registries option (Not Recommended)
+
+# Docker registry threats
+https://notsosecure.com/anatomy-of-a-hack-docker-registry/
+# to check security
+http://10.59.59.59:5000/v2/_catalog
+http://10.59.59.59:5000/v2/reponame/tags/list#
+http://10.59.59.59:5000/v2/reponame/manefest/ ... Check above link
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Create Docker Regirsty
+https://docs.docker.com/registry/deploying/
+$ docker run -d -p 5000:5000 --restart=always --name registry registry:2
+
+# With TLS
+# Create certificate
+mkdir -p certs
+openssl req \
+  -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key \
+  -addext "subjectAltName = DNS:myregistry.domain.com" \
+  -x509 -days 365 -out certs/domain.crt
+# Run registry
+docker run -d \
+  --restart=always \
+  --name registry \
+  -v "$(pwd)"/certs:/certs \
+  -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+  -p 443:443 \
+  registry:2
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# With Auth
+mkdir auth
+docker run \
+  --entrypoint htpasswd \
+  httpd:2 -Bbn testuser testpassword > auth/htpasswd
+
+$ docker run -d \
+  -p 5000:5000 \
+  --restart=always \
+  --name registry \
+  -v "$(pwd)"/auth:/auth \
+  -e "REGISTRY_AUTH=htpasswd" \
+  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
+  -v "$(pwd)"/certs:/certs \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+  registry:2
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# running insecure docker registry
+https://docs.docker.com/registry/insecure/
+# modify the below file and add 
+sudo vi /etc/docker/deamon.json
+--------------------------
+{
+  "insecure-registries" : ["myregistrydomain.com:5000"]
+}
+--------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
